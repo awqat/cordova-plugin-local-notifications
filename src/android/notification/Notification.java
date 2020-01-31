@@ -28,6 +28,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
@@ -112,6 +113,11 @@ public final class Notification {
         this.context  = context;
         this.options  = options;
         this.builder  = null;
+    }
+
+
+    public void setLargeIcon(Bitmap icon){
+       this.builder.setLargeIcon(icon);
     }
 
     /**
