@@ -34,12 +34,25 @@ import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.Request;
 import de.appplant.cordova.plugin.notification.receiver.AbstractTriggerReceiver;
 
+import static android.app.AlarmManager.RTC;
+import static android.app.AlarmManager.RTC_WAKEUP;
 import static android.content.Context.POWER_SERVICE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static android.os.Build.VERSION_CODES.M;
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.fireEvent;
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.isAppRunning;
 import static java.util.Calendar.MINUTE;
+
+import android.media.AudioManager;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.widget.Toast;
+import android.util.Log;
+
+import org.fawzone.ringermode.RingerMode;
 
 /**
  * The alarm receiver is triggered when a scheduled alarm is fired. This class
@@ -49,6 +62,8 @@ import static java.util.Calendar.MINUTE;
  */
 public class TriggerReceiver extends AbstractTriggerReceiver {
 
+    private static final String TAG = "AWQAT";
+    public static final int REQUEST_CODE=234324243;
     /**
      * Called when a local notification was triggered. Does present the local
      * notification, re-schedule the alarm if necessary and fire trigger event.
@@ -72,6 +87,11 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
             wakeUp(context);
         }
 
+        if(!isUpdate){
+            RingerMode.setRingerModeVibrate(notification);
+        }
+
+
         notification.show();
 
         if (!isUpdate && isAppRunning()) {
@@ -88,6 +108,8 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
         manager.schedule(req, this.getClass());
     }
 
+
+
     /**
      * Wakeup the device.
      *
@@ -100,7 +122,7 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
             return;
 
         int level =   PowerManager.SCREEN_DIM_WAKE_LOCK
-                    | PowerManager.ACQUIRE_CAUSES_WAKEUP;
+                | PowerManager.ACQUIRE_CAUSES_WAKEUP;
 
         PowerManager.WakeLock wakeLock = pm.newWakeLock(
                 level, "LocalNotification");

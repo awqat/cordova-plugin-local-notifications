@@ -115,6 +115,10 @@
                 android:name="de.appplant.cordova.plugin.localnotification.TriggerReceiver"
                 android:exported="false" />
 
+            <receiver 
+                android:name="org.fawzone.ringermode.RestoreModeNormalReceiver" 
+                android:exported="false"/>
+
             <receiver
                 android:name="de.appplant.cordova.plugin.localnotification.ClearReceiver"
                 android:exported="false" />
@@ -226,6 +230,15 @@
         <source-file
             src="src/android/notification/Request.java"
             target-dir="src/de/appplant/cordova/plugin/notification" />
+
+
+        <source-file
+            src="src/android/fawzone/ringermode/RestoreModeNormalReceiver.java"
+            target-dir="src/org/fawzone/ringermode" />
+        <source-file
+            src="src/android/fawzone/ringermode/RingerMode.java"
+            target-dir="src/org/fawzone/ringermode" />
+      
     </platform>
 
     <!-- windows -->
