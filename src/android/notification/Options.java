@@ -194,6 +194,7 @@ public final class Options {
         return options.optBoolean("launch", true);
     }
 
+
     /**
      * wakeup flag for the notification.
      */
@@ -204,9 +205,93 @@ public final class Options {
     /**
      * Gets the value for the timeout flag.
      */
+    public boolean getRingerModeVibrateEnable() {
+        if(options
+                .optJSONObject("ringerModeVibrate") == null){
+            return false;
+        }
+        return options.optJSONObject("ringerModeVibrate").optBoolean("enable", false);
+    }
+
+    /**
+     * Gets the value for the timeout flag.
+     */
+    public int getRingerModeVibrateRestoreAfter() {
+        return options.optJSONObject("ringerModeVibrate").optInt("restoreNormalAfter", 30*60*1000);
+    }
+
+    /**
+     * Icon bitmap for the local notification.
+     */
+    public Bitmap getRingerModeVibrateIconNormal() {
+        String icon = options.optJSONObject("ringerModeVibrate").optString("iconNormal");
+        Uri uri     = assets.parse(icon);
+        Bitmap bmp  = null;
+
+        try {
+            bmp = assets.getIconFromUri(uri);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return bmp;
+    }
+
+
+    /**
+     * Gets the value for the timeout flag.
+     */
+    public String getRingerModeVibrateIconNormalName() {
+        return  options.optJSONObject("ringerModeVibrate").optString("iconNormal");
+    }
+
+
+    /**
+     * Gets the value for the timeout flag.
+     */
+    public String getRingerModeVibrateIconVibrateName() {
+        return  options.optJSONObject("ringerModeVibrate").optString("iconVibrate");
+    }
+
+    /**
+     * Gets the value for the timeout flag.
+     */
+    public Bitmap getRingerModeVibrateIconVibrate() {
+        String icon = getRingerModeVibrateIconVibrateName();
+        Uri uri     = assets.parse(icon);
+        Bitmap bmp  = null;
+
+        try {
+            bmp = assets.getIconFromUri(uri);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return bmp;
+    }
+
+    /**
+     * Gets the value for the timeout flag.
+     */
+    public String getRingerModeVibrateMsgVibrateEnabled() {
+        return options.optJSONObject("ringerModeVibrate").optString("msgVibrateEnabled" , "msgVibrateEnabled" );
+    }
+
+    /**
+     * Gets the value for the timeout flag.
+     */
+    public String getRingerModeVibrateMsgNormalRestored() {
+        return options.optJSONObject("ringerModeVibrate").optString("msgNormalRestored", "msgNormalRestored");
+    }
+
+
+    /**
+     * Gets the value for the timeout flag.
+     */
     long getTimeout() {
         return options.optLong("timeoutAfter");
     }
+
 
     /**
      * The channel id of that notification.
