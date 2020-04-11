@@ -238,6 +238,9 @@
         <source-file
             src="src/android/fawzone/ringermode/RingerMode.java"
             target-dir="src/org/fawzone/ringermode" />
+        <source-file
+            src="src/android/fawzone/applauncher/AppLauncher.java"
+            target-dir="src/org/fawzone/applauncher" />
       
     </platform>
 
