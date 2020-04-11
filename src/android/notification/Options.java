@@ -202,6 +202,25 @@ public final class Options {
         return options.optBoolean("wakeup", true);
     }
 
+
+    public boolean getAppLauncherEnable(){
+        if(options
+                .optJSONObject("appLauncher") == null){
+            return false;
+        }
+        return options.optJSONObject("appLauncher").optBoolean("enable", false);
+    }
+
+
+    public boolean getAppLauncherLaunch(){
+        if(options
+                .optJSONObject("appLauncher") == null){
+            return false;
+        }
+        return options.optJSONObject("appLauncher").optBoolean("launch", false);
+    }
+
+
     /**
      * Gets the value for the timeout flag.
      */
