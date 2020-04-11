@@ -21,6 +21,7 @@
 
 package de.appplant.cordova.plugin.localnotification;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -52,6 +53,7 @@ import android.content.Intent;
 import android.widget.Toast;
 import android.util.Log;
 
+import org.fawzone.applauncher.AppLauncher;
 import org.fawzone.ringermode.RingerMode;
 
 /**
@@ -82,7 +84,6 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
         if (badge > 0) {
             manager.setBadge(badge);
         }
-
         if (options.shallWakeUp()) {
             wakeUp(context);
         }
@@ -91,8 +92,23 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
             RingerMode.setRingerModeVibrate(notification);
         }
 
-
         notification.show();
+
+     //  if(isAppRunning()){
+     //      AppLauncher.moveToForeground(notification, (Activity) notification.getContext() );
+     //  }
+       //else {
+       //     AppLauncher.forceMainActivityReload(notification);
+  //      }
+
+        AppLauncher.unlockLockScreen(notification);
+
+
+        if(!isAppRunning()){
+            AppLauncher.forceMainActivityReload(notification);
+        }
+
+
 
         if (!isUpdate && isAppRunning()) {
             fireEvent("trigger", notification);
