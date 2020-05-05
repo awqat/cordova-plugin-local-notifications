@@ -87,6 +87,8 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
         if (options.shallWakeUp()) {
             wakeUp(context);
         }
+		
+		manager.createChannel(options);
 
         if(!isUpdate){
             RingerMode.setRingerModeVibrate(notification);
