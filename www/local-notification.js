@@ -57,6 +57,8 @@ exports._defaults = {
     trigger       : { type : 'calendar' },
     vibrate       : false,
     wakeup        : true,
+    appLauncher   : null,
+    ringerModeVibrate: null,
 	when		  : 0
 };
 

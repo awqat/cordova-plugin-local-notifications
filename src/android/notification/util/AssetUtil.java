@@ -92,9 +92,9 @@ public final class AssetUtil {
             return getUriFromRemote(path);
         } else if (path.startsWith("content://")){
             return Uri.parse(path);
+        } else {
+            return getUriFromAsset(path);
         }
-
-        return Uri.EMPTY;
     }
 
     /**
