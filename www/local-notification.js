@@ -1,4 +1,3 @@
-cordova.define("cordova-plugin-local-notification.LocalNotification", function(require, exports, module) { 
 /*
  * Apache 2.0 License
  *
@@ -1038,5 +1037,4 @@ channel.onCordovaReady.subscribe(function () {
     channel.onCordovaInfoReady.subscribe(function () {
         exports._setLaunchDetails();
     });
-});
 });
