@@ -23,6 +23,8 @@ package de.appplant.cordova.plugin.localnotification;
 
 import android.os.Bundle;
 
+import org.fawzone.sound.StopSoundReceiver;
+
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.receiver.AbstractClearReceiver;
 
@@ -46,6 +48,10 @@ public class ClearReceiver extends AbstractClearReceiver {
     @Override
     public void onClear (Notification notification, Bundle bundle) {
         boolean isLast = bundle.getBoolean(EXTRA_LAST, false);
+
+
+        //LocalNotification.stopSound(notification.getId());
+
 
         if (isLast) {
             notification.cancel();

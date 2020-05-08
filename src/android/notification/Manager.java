@@ -126,8 +126,10 @@ public final class Manager {
 
         NotificationChannel channel = mgr.getNotificationChannel(options.getChannel());
 
-        if (channel != null)
-            return;
+        if (channel != null) {
+           // return; PB if the sound change
+            mgr.deleteNotificationChannel(options.getChannel());
+        }
 
         switch (options.getPrio()) {
             case PRIORITY_MIN:
@@ -149,6 +151,7 @@ public final class Manager {
 
         channel = new NotificationChannel(
                 options.getChannel(), options.getChannelDescription(), importance);
+
 		if(!options.isSilent() && importance > IMPORTANCE_DEFAULT) channel.setBypassDnd(true);
 		if(!options.isWithoutLights()) channel.enableLights(true);
 		if(options.isWithVibration()) {

@@ -25,17 +25,28 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.MessagingStyle.Message;
 import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
+
+import org.fawzone.sound.PauseSoundReceiver;
+import org.fawzone.sound.ResumeSoundReceiver;
+import org.fawzone.sound.StopSoundReceiver;
 
 import java.util.List;
 import java.util.Random;
 
+import de.appplant.cordova.plugin.localnotification.ClickReceiver;
+import de.appplant.cordova.plugin.localnotification.LocalNotification;
 import de.appplant.cordova.plugin.notification.action.Action;
+import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static de.appplant.cordova.plugin.notification.Notification.EXTRA_UPDATE;
@@ -143,9 +154,124 @@ public final class Builder {
                 .setTimeoutAfter(options.getTimeout())
                 .setLights(options.getLedColor(), options.getLedOn(), options.getLedOff());
 
-        if (sound != Uri.EMPTY && !isUpdate()) {
-            builder.setSound(sound);
-        }
+       // MediaPlayer mediaPlayer =null;
+      //  Ringtone ringtone = null;
+
+       Uri athanSound = AssetUtil.getInstance(context).parse("public/audio/adhan-ahmed-el-kourdi.mp3");
+
+
+    //    Uri athanSound = AssetUtil.getInstance(context).parse("public/audio/allahu_akbar.mp3");
+
+
+
+        //if (sound != Uri.EMPTY && !isUpdate()) {
+            //builder.setSound(sound);
+        //}
+
+          //  Uri defaultRingtoneUri = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE);
+            //mediaPlayer = MediaPlayer.create(context, sound);
+            // mediaPlayer.setLooping(true);
+            //  mediaPlayer.setVolume(lastVolumeValue, lastVolumeValue);
+          //  mediaPlayer.start();
+
+
+
+
+
+        //ringtone = RingtoneManager.getRingtone(context.getApplicationContext(), athanSound);
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, athanSound);
+
+
+        LocalNotification.putSound(options.getId(), mediaPlayer);
+
+        //ringtone.play();
+        //StopSoundReceiver.ringtone = ringtone;
+
+
+     /*       Intent notificationIntent_Restore = new Intent(this,Adult1Activity.class);
+            notificationIntent_Restore.putExtra(EXTRA_NOTE,NOTE_RESTORE);
+            PendingIntent restoreIntent = PendingIntent.getActivity(this,
+                    0, notificationIntent_Restore, PendingIntent.FLAG_UPDATE_CURRENT);
+*/
+
+     /*
+            Intent intent = new Intent(context, clickActivity)
+                    .putExtra(Notification.EXTRA_ID, options.getId())
+                    .putExtra(Action.EXTRA_ID, action.getId())
+                    .putExtra(Options.EXTRA_LAUNCH, action.isLaunchingApp())
+                    .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+            if (extras != null) {
+                intent.putExtras(extras);
+            }
+
+            int reqCode = random.nextInt();
+
+             PendingIntent.getService(
+                    context, reqCode, intent, FLAG_UPDATE_CURRENT);
+
+*/
+            int reqCode = random.nextInt();
+
+
+            final Intent notificationIntentStop = new Intent(context, StopSoundReceiver.class)
+                    .putExtra(Notification.EXTRA_ID, options.getId())
+                    .putExtra(Action.EXTRA_ID, "CLICK_ACTION_ID")
+                    .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                    .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            if (extras != null) {
+                notificationIntentStop.putExtras(extras);
+            }
+
+            PendingIntent  intentStop = PendingIntent.getService(context,
+                    reqCode, notificationIntentStop, PendingIntent.FLAG_UPDATE_CURRENT);
+
+           /* NotificationCompat.Action action =
+                    new NotificationCompat.Action.Builder(
+                            0, "action test", pi
+                    ).build();
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(R.drawable.schedule)
+                    .addAction(action)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                    .setContentTitle(title)
+                    .setContentText(body);
+            */
+
+            builder.addAction(0, "Stop", intentStop);
+
+         //   builder.addAction(new NotificationCompat.Action.Builder(0 , "Stop" , intentStop).build());
+
+
+            final Intent notificationIntentPause = new Intent(context, PauseSoundReceiver.class)
+                    .putExtra(Notification.EXTRA_ID, options.getId())
+                    .putExtra(Action.EXTRA_ID, Action.CLICK_ACTION_ID)
+                    .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                    .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+            reqCode = random.nextInt();
+            PendingIntent  intentPause = PendingIntent.getService(context,
+                    reqCode, notificationIntentPause, FLAG_UPDATE_CURRENT);
+            builder.addAction(new NotificationCompat.Action(android.R.drawable.star_on , "Pause" , intentPause));
+
+
+            final Intent notificationIntentResume = new Intent(context, ResumeSoundReceiver.class)
+                    .putExtra(Notification.EXTRA_ID, options.getId())
+                    .putExtra(Action.EXTRA_ID, "STOP_"+Action.CLICK_ACTION_ID)
+                    .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                    .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+            reqCode = random.nextInt();
+            PendingIntent  intentResume = PendingIntent.getService(context,
+                    reqCode, notificationIntentResume, PendingIntent.FLAG_UPDATE_CURRENT  );
+            builder.addAction(new NotificationCompat.Action(android.R.drawable.stat_notify_chat , "Resume" , intentResume));
+
+             //       .addAction(new NotificationCompat.Action(/*R.drawable.ic_note_restore,*/ "Restore", restoreIntent))
+
+
+
 
         if (options.isWithProgressBar()) {
             builder.setProgress(
@@ -167,9 +293,25 @@ public final class Builder {
         applyStyle(builder);
         applyActions(builder);
         applyDeleteReceiver(builder);
-        applyContentReceiver(builder);
+        //applyContentReceiver(builder);
 
-        return new Notification(context, options, builder);
+
+       final Notification notification = new Notification(context, options, builder);
+
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Log.i ("TAG", options.getId()+"  :  sound complete clearing notification  ");
+                notification.clear();
+            }
+        });
+
+        //Notification.getCachedBuilder(notification.getId());
+
+        return notification;
+
+
     }
 
     /**

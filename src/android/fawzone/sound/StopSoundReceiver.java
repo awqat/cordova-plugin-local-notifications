@@ -19,16 +19,17 @@
  * limitations under the License.
  */
 
-package de.appplant.cordova.plugin.localnotification;
+package org.fawzone.sound;
 
+import android.media.Ringtone;
 import android.os.Bundle;
 import android.support.v4.app.RemoteInput;
 import android.util.Log;
 
-import org.fawzone.sound.StopSoundReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.appplant.cordova.plugin.localnotification.LocalNotification;
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.receiver.AbstractClickReceiver;
 
@@ -41,7 +42,8 @@ import static de.appplant.cordova.plugin.notification.Request.EXTRA_LAST;
  * The activity calls the background callback and brings the launch intent
  * up to foreground.
  */
-public class ClickReceiver extends AbstractClickReceiver {
+public class StopSoundReceiver extends AbstractClickReceiver {
+
 
     /**
      * Called when local notification was clicked by the user.
@@ -53,23 +55,23 @@ public class ClickReceiver extends AbstractClickReceiver {
     public void onClick(Notification notification, Bundle bundle) {
         String action   = getAction();
         JSONObject data = new JSONObject();
-        Log.e("ClickReceiver", " > onClick " +action);
-
+        Log.e("StopSoundReceiver", " > onClick " +action);
         setTextInput(action, data);
         launchAppIf();
 
         fireEvent(action, notification, data);
 
-        //LocalNotification.stopSound(notification.getId());
+        LocalNotification.stopSound(notification.getId());
 
-        if (notification.getOptions().isSticky())
-            return;
+//        if (notification.getOptions().isSticky())
+//            return;
 
         if (isLast()) {
             notification.cancel();
         } else {
             notification.clear();
         }
+
     }
 
     /**
