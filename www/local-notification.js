@@ -50,7 +50,6 @@ exports._defaults = {
     silent        : false,
     smallIcon     : 'res://icon',
     sound         : true,
-    soundDetached : false,
     sticky        : false,
     summary       : null,
     text          : '',
@@ -173,13 +172,6 @@ exports.clear = function (ids, callback, scope) {
     ids = this._convertIds(ids);
 
     this._exec('clear', ids, callback, scope);
-};
-
-exports.stopSounds = function (ids, callback, scope) {
-    ids = this._toArray(ids);
-    ids = this._convertIds(ids);
-
-    this._exec('stopSounds', ids, callback, scope);
 };
 
 /**
