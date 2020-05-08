@@ -174,6 +174,22 @@ exports.clear = function (ids, callback, scope) {
 };
 
 /**
+ * Clear the specified notifications by id.
+ *
+ * @param [ Array<Int> ] ids      The IDs of the notifications.
+ * @param [ Function ]   callback The function to be exec as the callback.
+ * @param [ Object ]     scope    The callback function's scope.
+ *
+ * @return [ Void ]
+ */
+exports.stopSounds = function (ids, callback, scope) {
+    ids = this._toArray(ids);
+    ids = this._convertIds(ids);
+
+    this._exec('stopSounds', ids, callback, scope);
+};
+
+/**
  * Clear all triggered notifications.
  *
  * @param [ Function ] callback The function to be exec as the callback.
