@@ -161,7 +161,7 @@ public final class Manager {
 			channel.enableVibration(true);
 		}
 		channel.setLightColor(options.getLedColor());
-        if(options.isWithoutSound()) {
+        if(options.isWithoutSound() || options.isSoundDetached() ) {
 			channel.setSound(null, null);
 		} else {
 			AudioAttributes audioAttributes = new AudioAttributes.Builder()
