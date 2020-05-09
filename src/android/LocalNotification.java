@@ -27,9 +27,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
@@ -38,15 +35,14 @@ import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
+import org.fawzone.sound.SoundManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
@@ -79,113 +75,6 @@ public class LocalNotification extends CordovaPlugin {
 
     // Launch details
     private static Pair<Integer, String> launchDetails;
-
-    private static final Map<Integer, MediaPlayer>  SOUNDS_MAP = new HashMap<>();
-
-    public static void putSound(Integer id, MediaPlayer sound){
-        Log.i(TAG," > putSound  "+id);
-        MediaPlayer soundOld = getSound(id);
-
-        if(soundOld != null){
-            Log.w(TAG,"    putSound  "+id+" OLD SOUND IS NOT NULL ==> release ...");
-            soundOld.release();
-        }
-
-        SOUNDS_MAP.put(id, sound);
-    }
-
-    public static MediaPlayer getSound(Integer id){
-        return SOUNDS_MAP.get(id);
-    }
-
-    public static void playSound(Integer id){
-        Log.i(TAG," > playSound  "+id);
-        MediaPlayer sound = getSound(id);
-
-        if(sound == null){
-            Log.w(TAG,"    playSound  "+id+"  SOUND IS NULL ");
-            return;
-        }
-
-        if(sound.isPlaying()){
-            Log.w(TAG,"    playSound  "+id+"  SOUND IS PLAYING ");
-            return;
-        }
-
-        try {
-            sound.start();
-        } catch(Exception e){
-            Log.e(TAG, " playSound :: " , e);
-        }
-    }
-
-    public static void stopSound(Integer id){
-        Log.i(TAG," > stopSound  "+id);
-
-        MediaPlayer sound = getSound(id);
-
-        if(sound == null){
-            Log.w(TAG,"    stopSound  "+id+"  SOUND IS NULL ");
-            return;
-        }
-
-        if(!sound.isPlaying()){
-            Log.w(TAG,"    stopSound  "+id+"  SOUND IS NOT PLAYING ");
-            return;
-        }
-
-        try {
-            sound.stop();
-        } catch(Exception e){
-            Log.e(TAG, " stopSound :: " , e);
-        }
-    }
-
-    public static void pauseSound(Integer id){
-        Log.i(TAG," > pauseSound  "+id);
-
-        MediaPlayer sound = getSound(id);
-
-        if(sound == null){
-            Log.w(TAG,"    pauseSound  "+id+"  SOUND IS NULL ");
-            return;
-        }
-
-        if(!sound.isPlaying()){
-            Log.w(TAG,"    pauseSound  "+id+"  SOUND IS NOT PLAYING ");
-            return;
-        }
-
-        try {
-            sound.pause();
-        } catch(Exception e){
-            Log.e(TAG, " pauseSound :: " , e);
-        }
-    }
-
-    public static void resumeSound(Integer id){
-        Log.i(TAG," > stopSound  "+id);
-
-        MediaPlayer sound = getSound(id);
-
-        if(sound == null){
-            Log.w(TAG,"    stopSound  "+id+"  SOUND IS NULL ");
-            return;
-        }
-
-        if(sound.isPlaying()){
-            Log.w(TAG,"    stopSound  "+id+"  SOUND IS PLAYING ");
-            return;
-        }
-
-        try {
-            sound.seekTo(sound.getCurrentPosition());
-            sound.start();
-        } catch(Exception e){
-            Log.e(TAG, " resumeSound :: " , e);
-        }
-    }
-
 
     /**
      * Called after plugin construction and fields have been initialized.
@@ -289,7 +178,7 @@ public class LocalNotification extends CordovaPlugin {
                     notifications(args, command);
                 } else
                 if (action.equals("stopSounds")){
-                    stopSound(args, command);
+                    stopSounds(args, command);
                 }
             }
         });
@@ -489,21 +378,13 @@ public class LocalNotification extends CordovaPlugin {
      * @param command The callback context used when calling back into
      *                JavaScript.
      */
-    private void stopSound(JSONArray ids, CallbackContext command) {
+    private void stopSounds(JSONArray ids, CallbackContext command) {
 
         Manager mgr = getNotMgr();
 
-        for (Map.Entry<Integer,MediaPlayer> entry :  SOUNDS_MAP.entrySet()){
-            Log.i(TAG, "   Stop :  "+entry.getKey()  );
+        SoundManager.stopSounds();
 
-            if(!entry.getValue().isPlaying()){
-                continue;
-            }
-            entry.getValue().stop();
-            entry.getValue().release();
-        }
-
-        //fireEvent("clear", toast);
+        fireEvent("stopSounds");
 
         command.success();
     }

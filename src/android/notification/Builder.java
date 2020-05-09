@@ -38,6 +38,7 @@ import android.util.Log;
 
 import org.fawzone.sound.PauseSoundReceiver;
 import org.fawzone.sound.ResumeSoundReceiver;
+import org.fawzone.sound.SoundManager;
 import org.fawzone.sound.StopSoundReceiver;
 
 import java.util.List;
@@ -191,7 +192,7 @@ public final class Builder {
         if(sound != Uri.EMPTY  && !isUpdate() ) {
             if (options.isSoundDetached()) {
                 MediaPlayer mediaPlayer = MediaPlayer.create(context, sound);
-                LocalNotification.putSound(options.getId(), mediaPlayer);
+                SoundManager.putSound(options.getId(), mediaPlayer);
                 addSoundActions(builder, extras);
 
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

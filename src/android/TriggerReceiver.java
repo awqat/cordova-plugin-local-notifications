@@ -40,7 +40,6 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.fireEvent;
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.isAppRunning;
-import static de.appplant.cordova.plugin.localnotification.LocalNotification.playSound;
 
 import static java.util.Calendar.MINUTE;
 
@@ -48,6 +47,7 @@ import android.util.Log;
 
 import org.fawzone.applauncher.AppLauncher;
 import org.fawzone.ringermode.RingerMode;
+import org.fawzone.sound.SoundManager;
 
 /**
  * The alarm receiver is triggered when a scheduled alarm is fired. This class
@@ -90,7 +90,7 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
         }
 
         //Play Sound
-        playSound(notification.getId());
+        SoundManager.playSound(notification.getId());
 
         notification.show();
 

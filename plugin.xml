@@ -248,6 +248,10 @@
             target-dir="src/org/fawzone/applauncher" />
       
         <source-file
+            src="src/android/fawzone/sound/SoundMananger.java"
+            target-dir="src/org/fawzone/sound" />
+
+        <source-file
             src="src/android/fawzone/sound/PauseSoundReceiver.java"
             target-dir="src/org/fawzone/sound" />
         <source-file
