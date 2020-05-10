@@ -30,8 +30,6 @@ import android.media.Ringtone;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.MessagingStyle.Message;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MIN;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MAX;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import org.json.JSONArray;
@@ -50,6 +48,8 @@ import de.appplant.cordova.plugin.notification.util.AssetUtil;
 import static android.support.v4.app.NotificationCompat.DEFAULT_LIGHTS;
 import static android.support.v4.app.NotificationCompat.DEFAULT_SOUND;
 import static android.support.v4.app.NotificationCompat.DEFAULT_VIBRATE;
+import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
+import static android.support.v4.app.NotificationCompat.PRIORITY_MIN;
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 import static android.support.v4.app.NotificationCompat.VISIBILITY_SECRET;
 
@@ -592,7 +592,9 @@ public final class Options {
      * Gets the notifications priority.
      */
     int getPrio() {
-        return Math.min(Math.max(options.optInt("priority"), IMPORTANCE_MIN), IMPORTANCE_MAX);
+        int prio = options.optInt("priority");
+
+        return Math.min(Math.max(prio, PRIORITY_MIN), PRIORITY_MAX);
     }
 
     /**

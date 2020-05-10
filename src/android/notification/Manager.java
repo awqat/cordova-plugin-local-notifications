@@ -131,6 +131,8 @@ public final class Manager {
             mgr.deleteNotificationChannel(options.getChannel());
         }
 
+
+
         switch (options.getPrio()) {
             case PRIORITY_MIN:
                 importance = IMPORTANCE_MIN;
@@ -148,6 +150,7 @@ public final class Manager {
                 importance = IMPORTANCE_HIGH;
                 break;
         }
+
 
         channel = new NotificationChannel(
                 options.getChannel(), options.getChannelDescription(), importance);
