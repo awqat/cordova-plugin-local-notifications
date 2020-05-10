@@ -54,6 +54,7 @@ import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MIN;
 import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_LOW;
 import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_DEFAULT;
 import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_HIGH;
+import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MAX;
 import static de.appplant.cordova.plugin.notification.Notification.PREF_KEY_ID;
 import static de.appplant.cordova.plugin.notification.Notification.Type.TRIGGERED;
 import de.appplant.cordova.plugin.notification.Options;
@@ -147,7 +148,7 @@ public final class Manager {
                 importance = IMPORTANCE_HIGH;
                 break;
             case PRIORITY_MAX:
-                importance = IMPORTANCE_HIGH;
+                importance = IMPORTANCE_MAX;
                 break;
         }
 

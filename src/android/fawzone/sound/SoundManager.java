@@ -37,12 +37,12 @@ public class SoundManager {
             return;
         }
 
-        if(sound.isPlaying()){
-            Log.w(TAG,"    playSound  "+id+"  SOUND IS PLAYING ");
-            return;
-        }
-
         try {
+            if(sound.isPlaying()){
+                Log.w(TAG,"    playSound  "+id+"  SOUND IS PLAYING ");
+                return;
+            }
+
             sound.start();
         } catch(Exception e){
             Log.e(TAG, " playSound :: " , e);
@@ -59,12 +59,12 @@ public class SoundManager {
             return;
         }
 
-        if(!sound.isPlaying()){
-            Log.w(TAG,"    stopSound  "+id+"  SOUND IS NOT PLAYING ");
-            return;
-        }
-
         try {
+            if(!sound.isPlaying()){
+                Log.w(TAG,"    stopSound  "+id+"  SOUND IS NOT PLAYING ");
+                return;
+            }
+
             sound.stop();
         } catch(Exception e){
             Log.e(TAG, " stopSound :: " , e);
@@ -81,12 +81,11 @@ public class SoundManager {
             return;
         }
 
-        if(!sound.isPlaying()){
-            Log.w(TAG,"    pauseSound  "+id+"  SOUND IS NOT PLAYING ");
-            return;
-        }
-
         try {
+            if(!sound.isPlaying()){
+                Log.w(TAG,"    pauseSound  "+id+"  SOUND IS NOT PLAYING ");
+                return;
+            }
             sound.pause();
         } catch(Exception e){
             Log.e(TAG, " pauseSound :: " , e);
@@ -103,12 +102,12 @@ public class SoundManager {
             return;
         }
 
-        if(sound.isPlaying()){
-            Log.w(TAG,"    stopSound  "+id+"  SOUND IS PLAYING ");
-            return;
-        }
-
         try {
+            if(sound.isPlaying()){
+                Log.w(TAG,"    stopSound  "+id+"  SOUND IS PLAYING ");
+                return;
+            }
+
             sound.seekTo(sound.getCurrentPosition());
             sound.start();
         } catch(Exception e){
