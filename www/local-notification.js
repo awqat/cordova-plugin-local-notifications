@@ -183,9 +183,6 @@ exports.clear = function (ids, callback, scope) {
  * @return [ Void ]
  */
 exports.stopSound = function (callback, scope) {
-    ids = this._toArray(ids);
-    ids = this._convertIds(ids);
-
     this._exec('stopSound', null, callback, scope);
 };
 
@@ -199,9 +196,6 @@ exports.stopSound = function (callback, scope) {
  * @return [ Void ]
  */
 exports.pauseSound = function (callback, scope) {
-    ids = this._toArray(ids);
-    ids = this._convertIds(ids);
-
     this._exec('pauseSound', null, callback, scope);
 };
 
@@ -214,9 +208,6 @@ exports.pauseSound = function (callback, scope) {
  * @return [ Void ]
  */
 exports.playSound = function (callback, scope) {
-    ids = this._toArray(ids);
-    ids = this._convertIds(ids);
-
     this._exec('playSound', null, callback, scope);
 };
 
@@ -229,9 +220,6 @@ exports.playSound = function (callback, scope) {
  * @return [ Void ]
  */
 exports.resumeSound = function (callback, scope) {
-    ids = this._toArray(ids);
-    ids = this._convertIds(ids);
-
     this._exec('resumeSound', null, callback, scope);
 };
 
