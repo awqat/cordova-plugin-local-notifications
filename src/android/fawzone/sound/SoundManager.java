@@ -5,9 +5,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.appplant.cordova.plugin.notification.Notification;
 
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.fireEvent;
@@ -16,6 +13,11 @@ import static de.appplant.cordova.plugin.localnotification.LocalNotification.isA
 public class SoundManager {
 
     public static final String TAG = "SoundManager";
+
+    public static final String PAUSE_SOUND = "pauseSound";
+    public static final String RESUME_SOUND = "resumeSound";
+    public static final String PLAY_SOUND = "playSound";
+    public static final String STOP_SOUND = "stopSound";
 
     private static MediaPlayer sound;
 
@@ -53,11 +55,11 @@ public class SoundManager {
         return notification!=null?notification.getId():null;
     }
 
-    private static boolean isMustFireEvent(Notification notification){
+    private static boolean canFireEvent(Notification notification){
         return notification!=null && isAppRunning();
     }
 
-    public static void playSound(Notification notification){
+    public static void playSound(Notification notification, boolean fireEvent){
         Integer id =getNotificationId(notification);
 
         Log.i(TAG," > playSound  "+id);
@@ -75,16 +77,19 @@ public class SoundManager {
 
             sound.start();
 
-            if (isMustFireEvent( notification)) {
-                fireEvent("playSound", notification);
+            if (fireEvent && canFireEvent( notification)) {
+                fireEvent(PLAY_SOUND, notification);
             }
+
 
         } catch(Exception e){
             Log.e(TAG, " playSound :: " , e);
         }
     }
 
-    public static void stopSound(Notification notification){
+
+
+    public static void stopSound(Notification notification, boolean fireEvent){
         Integer id =getNotificationId(notification);
 
         Log.i(TAG," > stopSound  "+id);
@@ -102,8 +107,8 @@ public class SoundManager {
 
             sound.stop();
 
-            if (isMustFireEvent( notification)) {
-                fireEvent("stopSound", notification);
+            if (fireEvent && canFireEvent( notification)) {
+                fireEvent(STOP_SOUND, notification);
             }
 //TODO             sound.release();
         } catch(Exception e){
@@ -111,7 +116,7 @@ public class SoundManager {
         }
     }
 
-    public static void pauseSound(Notification notification){
+    public static void pauseSound(Notification notification, boolean fireEvent){
         Integer id =getNotificationId(notification);
 
         Log.i(TAG," > pauseSound  "+id);
@@ -128,15 +133,15 @@ public class SoundManager {
             }
             sound.pause();
 
-            if (isMustFireEvent( notification)) {
-                fireEvent("pauseSound", notification);
+            if (fireEvent && canFireEvent( notification)) {
+                fireEvent(PAUSE_SOUND, notification);
             }
         } catch(Exception e){
             Log.e(TAG, " pauseSound :: " , e);
         }
     }
 
-    public static void resumeSound(Notification notification){
+    public static void resumeSound(Notification notification, boolean fireEvent){
         Integer id =getNotificationId(notification);
 
         Log.i(TAG," > stopSound  "+id);
@@ -155,17 +160,14 @@ public class SoundManager {
             sound.seekTo(sound.getCurrentPosition());
             sound.start();
 
-            if (isMustFireEvent(notification)) {
-                fireEvent("resumeSound", notification);
+            if (fireEvent && canFireEvent( notification)) {
+                fireEvent(RESUME_SOUND, notification);
             }
 
         } catch(Exception e){
             Log.e(TAG, " resumeSound :: " , e);
         }
     }
-
-
-
 
 
 

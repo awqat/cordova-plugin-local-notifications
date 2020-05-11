@@ -381,35 +381,35 @@ public class LocalNotification extends CordovaPlugin {
     }
 
     /**
-     * Stop sound
+     * Pause sound
      *
      * @param command The callback context used when calling back into
      *                JavaScript.
      */
     private void pauseSound(CallbackContext command) {
-        SoundManager.pauseSound(null);
+        SoundManager.pauseSound(null, false);
         command.success();
     }
 
     /**
-     * Stop sound
+     * Play sound
      *
      * @param command The callback context used when calling back into
      *                JavaScript.
      */
     private void playSound(CallbackContext command) {
-        SoundManager.playSound(null);
+        SoundManager.playSound(null, false);
         command.success();
     }
 
     /**
-     * Stop sound
+     * Resume sound
      *
      * @param command The callback context used when calling back into
      *                JavaScript.
      */
     private void resumeSound(CallbackContext command) {
-        SoundManager.resumeSound(null);
+        SoundManager.resumeSound(null, false);
         command.success();
     }
 
@@ -420,7 +420,7 @@ public class LocalNotification extends CordovaPlugin {
      *                JavaScript.
      */
     private void stopSound(CallbackContext command) {
-        SoundManager.stopSound(null);
+        SoundManager.stopSound(null, false);
         command.success();
     }
 

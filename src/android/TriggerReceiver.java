@@ -42,6 +42,7 @@ import static de.appplant.cordova.plugin.localnotification.LocalNotification.fir
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.isAppRunning;
 
 import static java.util.Calendar.MINUTE;
+import static org.fawzone.sound.SoundManager.PLAY_SOUND;
 
 import android.util.Log;
 
@@ -92,7 +93,7 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
         notification.show();
 
         //Play Sound
-        SoundManager.playSound(notification);
+        SoundManager.playSound(notification, !isUpdate);
 
 
      //  if(isAppRunning()){
