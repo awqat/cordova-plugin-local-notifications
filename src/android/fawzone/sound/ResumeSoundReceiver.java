@@ -37,31 +37,8 @@ public class ResumeSoundReceiver extends AbstractClickReceiver {
         setTextInput(action, data);
         launchAppIf();
 
-        fireEvent(action, notification, data);
-
-
-        // MediaPlayer mediaPlayer = notification.getMediaPlayer();
-
-
-
         SoundManager.resumeSound(notification);
 
-        /*
-        if(StopSoundReceiver.ringtone != null){
-            StopSoundReceiver.ringtone.stop();
-            // mediaPlayer.release();
-        }*/
-
-/*
-        if (notification.getOptions().isSticky())
-            return;
-
-        if (isLast()) {
-            notification.cancel();
-        } else {
-            notification.clear();
-        }
-        */
     }
 
     /**
@@ -95,11 +72,5 @@ public class ResumeSoundReceiver extends AbstractClickReceiver {
         launchApp();
     }
 
-    /**
-     * If the notification was the last scheduled one by request.
-     */
-    private boolean isLast() {
-        return getIntent().getBooleanExtra(EXTRA_LAST, false);
-    }
 
 }

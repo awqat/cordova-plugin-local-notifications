@@ -59,7 +59,7 @@ public class StopSoundReceiver extends AbstractClickReceiver {
         setTextInput(action, data);
         launchAppIf();
 
-        fireEvent(action, notification, data);
+        //fireEvent(action, notification, data);
 
         SoundManager.stopSound(notification);
 
