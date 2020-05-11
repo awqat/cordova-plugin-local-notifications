@@ -191,18 +191,8 @@ public final class Builder {
 
         if(sound != Uri.EMPTY  && !isUpdate() ) {
             if (options.isSoundDetached()) {
-                MediaPlayer mediaPlayer = MediaPlayer.create(context, sound);
-                SoundManager.putSound(options.getId(), mediaPlayer);
+                SoundManager.createSound(sound, context, notification);
                 addSoundActions(builder, extras);
-
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        Log.i ("TAG", options.getId()+"  :  sound complete clearing notification  ");
-                        notification.clear();
-                    }
-                });
-
             } else {
                 builder.setSound(sound);
             }

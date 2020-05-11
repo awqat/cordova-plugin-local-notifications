@@ -177,8 +177,17 @@ public class LocalNotification extends CordovaPlugin {
                 if (action.equals("notifications")) {
                     notifications(args, command);
                 } else
-                if (action.equals("stopSounds")){
-                    stopSounds(args, command);
+                if (action.equals("stopSound")){
+                    stopSound(command);
+                }else
+                if (action.equals("pauseSound")){
+                    pauseSound(command);
+                }else
+                if (action.equals("playSound")){
+                    playSound(command);
+                }else
+                if (action.equals("resumeSound")){
+                    resumeSound(command);
                 }
             }
         });
@@ -372,22 +381,49 @@ public class LocalNotification extends CordovaPlugin {
     }
 
     /**
-     * Clear multiple local notifications without canceling them.
+     * Stop sound
      *
-     * @param ids     Set of local notification IDs.
      * @param command The callback context used when calling back into
      *                JavaScript.
      */
-    private void stopSounds(JSONArray ids, CallbackContext command) {
-
-        Manager mgr = getNotMgr();
-
-        SoundManager.stopSounds();
-
-        fireEvent("stopSounds");
-
+    private void pauseSound(CallbackContext command) {
+        SoundManager.pauseSound(null);
         command.success();
     }
+
+    /**
+     * Stop sound
+     *
+     * @param command The callback context used when calling back into
+     *                JavaScript.
+     */
+    private void playSound(CallbackContext command) {
+        SoundManager.playSound(null);
+        command.success();
+    }
+
+    /**
+     * Stop sound
+     *
+     * @param command The callback context used when calling back into
+     *                JavaScript.
+     */
+    private void resumeSound(CallbackContext command) {
+        SoundManager.resumeSound(null);
+        command.success();
+    }
+
+    /**
+     * Stop sound
+     *
+     * @param command The callback context used when calling back into
+     *                JavaScript.
+     */
+    private void stopSound(CallbackContext command) {
+        SoundManager.stopSound(null);
+        command.success();
+    }
+
 
 
     /**
@@ -639,7 +675,7 @@ public class LocalNotification extends CordovaPlugin {
     /**
      * If the app is running.
      */
-    static boolean isAppRunning() {
+    public static boolean isAppRunning() {
         return webView != null;
     }
 

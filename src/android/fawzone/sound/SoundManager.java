@@ -1,36 +1,66 @@
 package org.fawzone.sound;
 
+import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import de.appplant.cordova.plugin.notification.Notification;
+
+import static de.appplant.cordova.plugin.localnotification.LocalNotification.fireEvent;
+import static de.appplant.cordova.plugin.localnotification.LocalNotification.isAppRunning;
+
 public class SoundManager {
 
     public static final String TAG = "SoundManager";
 
-    private static final Map<Integer, MediaPlayer> SOUNDS_MAP = new HashMap<>();
+    private static MediaPlayer sound;
 
-    public static void putSound(Integer id, MediaPlayer sound){
-        Log.i(TAG," > putSound  "+id);
-        MediaPlayer soundOld = getSound(id);
+    public static void createSound(Uri soundUri, Context context, Notification notification) {
 
-        if(soundOld != null){
-            Log.w(TAG,"    putSound  "+id+" OLD SOUND IS NOT NULL ==> release ...");
-            soundOld.release();
+        if (sound != null) {
+            try {
+                Log.w(TAG, "    createSound OLD SOUND IS NOT NULL ==> release ...");
+                sound.release();
+            } catch(Exception e){
+                Log.e(TAG, " createSound :: old sound.release() ", e);
+            }
         }
 
-        SOUNDS_MAP.put(id, sound);
+        try {
+            sound = MediaPlayer.create(context, soundUri);
+     // TODO   addSoundActions(builder, extras);
+
+            sound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    Log.i ("TAG", notification.getId()+"  :  sound complete clearing notification  ");
+                    notification.clear();
+                }
+            });
+
+        } catch(Exception e){
+            Log.e(TAG, " createSound :: old sound.release() ", e);
+        }
+
     }
 
-    public static MediaPlayer getSound(Integer id){
-        return SOUNDS_MAP.get(id);
+
+    private static Integer getNotificationId(Notification notification){
+        return notification!=null?notification.getId():null;
     }
 
-    public static void playSound(Integer id){
+    private static boolean isMustFireEvent(Notification notification){
+        return notification!=null && isAppRunning();
+    }
+
+    public static void playSound(Notification notification){
+        Integer id =getNotificationId(notification);
+
         Log.i(TAG," > playSound  "+id);
-        MediaPlayer sound = getSound(id);
 
         if(sound == null){
             Log.w(TAG,"    playSound  "+id+"  SOUND IS NULL ");
@@ -44,15 +74,20 @@ public class SoundManager {
             }
 
             sound.start();
+
+            if (isMustFireEvent( notification)) {
+                fireEvent("playSound", notification);
+            }
+
         } catch(Exception e){
             Log.e(TAG, " playSound :: " , e);
         }
     }
 
-    public static void stopSound(Integer id){
-        Log.i(TAG," > stopSound  "+id);
+    public static void stopSound(Notification notification){
+        Integer id =getNotificationId(notification);
 
-        MediaPlayer sound = getSound(id);
+        Log.i(TAG," > stopSound  "+id);
 
         if(sound == null){
             Log.w(TAG,"    stopSound  "+id+"  SOUND IS NULL ");
@@ -66,15 +101,20 @@ public class SoundManager {
             }
 
             sound.stop();
+
+            if (isMustFireEvent( notification)) {
+                fireEvent("stopSound", notification);
+            }
+//TODO             sound.release();
         } catch(Exception e){
             Log.e(TAG, " stopSound :: " , e);
         }
     }
 
-    public static void pauseSound(Integer id){
-        Log.i(TAG," > pauseSound  "+id);
+    public static void pauseSound(Notification notification){
+        Integer id =getNotificationId(notification);
 
-        MediaPlayer sound = getSound(id);
+        Log.i(TAG," > pauseSound  "+id);
 
         if(sound == null){
             Log.w(TAG,"    pauseSound  "+id+"  SOUND IS NULL ");
@@ -87,15 +127,19 @@ public class SoundManager {
                 return;
             }
             sound.pause();
+
+            if (isMustFireEvent( notification)) {
+                fireEvent("pauseSound", notification);
+            }
         } catch(Exception e){
             Log.e(TAG, " pauseSound :: " , e);
         }
     }
 
-    public static void resumeSound(Integer id){
-        Log.i(TAG," > stopSound  "+id);
+    public static void resumeSound(Notification notification){
+        Integer id =getNotificationId(notification);
 
-        MediaPlayer sound = getSound(id);
+        Log.i(TAG," > stopSound  "+id);
 
         if(sound == null){
             Log.w(TAG,"    stopSound  "+id+"  SOUND IS NULL ");
@@ -110,31 +154,18 @@ public class SoundManager {
 
             sound.seekTo(sound.getCurrentPosition());
             sound.start();
+
+            if (isMustFireEvent(notification)) {
+                fireEvent("resumeSound", notification);
+            }
+
         } catch(Exception e){
             Log.e(TAG, " resumeSound :: " , e);
         }
     }
 
 
-    public static void stopSounds(){
-        for (Map.Entry<Integer,MediaPlayer> entry :  SOUNDS_MAP.entrySet()){
-            Log.i(TAG, "   Stop :  "+entry.getKey()  );
 
-            try {
-
-                if (!entry.getValue().isPlaying()) {
-                    continue;
-                }
-
-                entry.getValue().stop();
-                entry.getValue().release();
-
-            } catch(Exception e){
-                Log.e(TAG, " stopSounds :: " , e);
-            }
-
-        }
-    }
 
 
 

@@ -36,7 +36,7 @@ public class PauseSoundReceiver extends AbstractClickReceiver {
         try {
             Log.e(TAG, " onReceive " + notification);
 
-            SoundManager.pauseSound(notification.getId());
+            SoundManager.pauseSound(notification);
 
         } catch (Exception e) {
             e.printStackTrace();

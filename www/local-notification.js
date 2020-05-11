@@ -174,7 +174,7 @@ exports.clear = function (ids, callback, scope) {
 };
 
 /**
- * Clear the specified notifications by id.
+ * Stop sound
  *
  * @param [ Array<Int> ] ids      The IDs of the notifications.
  * @param [ Function ]   callback The function to be exec as the callback.
@@ -182,11 +182,57 @@ exports.clear = function (ids, callback, scope) {
  *
  * @return [ Void ]
  */
-exports.stopSounds = function (ids, callback, scope) {
+exports.stopSound = function (callback, scope) {
     ids = this._toArray(ids);
     ids = this._convertIds(ids);
 
-    this._exec('stopSounds', ids, callback, scope);
+    this._exec('stopSound', null, callback, scope);
+};
+
+
+/**
+ * Stop sound
+ *
+ * @param [ Function ]   callback The function to be exec as the callback.
+ * @param [ Object ]     scope    The callback function's scope.
+ *
+ * @return [ Void ]
+ */
+exports.pauseSound = function (callback, scope) {
+    ids = this._toArray(ids);
+    ids = this._convertIds(ids);
+
+    this._exec('pauseSound', null, callback, scope);
+};
+
+/**
+ * Stop sound
+ *
+ * @param [ Function ]   callback The function to be exec as the callback.
+ * @param [ Object ]     scope    The callback function's scope.
+ *
+ * @return [ Void ]
+ */
+exports.playSound = function (callback, scope) {
+    ids = this._toArray(ids);
+    ids = this._convertIds(ids);
+
+    this._exec('playSound', null, callback, scope);
+};
+
+/**
+ * Stop sound
+ *
+ * @param [ Function ]   callback The function to be exec as the callback.
+ * @param [ Object ]     scope    The callback function's scope.
+ *
+ * @return [ Void ]
+ */
+exports.resumeSound = function (callback, scope) {
+    ids = this._toArray(ids);
+    ids = this._convertIds(ids);
+
+    this._exec('resumeSound', null, callback, scope);
 };
 
 /**

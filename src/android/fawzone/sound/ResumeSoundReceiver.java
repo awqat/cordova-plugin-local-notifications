@@ -44,7 +44,7 @@ public class ResumeSoundReceiver extends AbstractClickReceiver {
 
 
 
-        SoundManager.resumeSound(notification.getId());
+        SoundManager.resumeSound(notification);
 
         /*
         if(StopSoundReceiver.ringtone != null){

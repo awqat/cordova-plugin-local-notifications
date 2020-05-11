@@ -61,7 +61,7 @@ public class StopSoundReceiver extends AbstractClickReceiver {
 
         fireEvent(action, notification, data);
 
-        SoundManager.stopSound(notification.getId());
+        SoundManager.stopSound(notification);
 
 //        if (notification.getOptions().isSticky())
 //            return;

@@ -89,10 +89,11 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
             RingerMode.setRingerModeVibrate(notification);
         }
 
-        //Play Sound
-        SoundManager.playSound(notification.getId());
-
         notification.show();
+
+        //Play Sound
+        SoundManager.playSound(notification);
+
 
      //  if(isAppRunning()){
      //      AppLauncher.moveToForeground(notification, (Activity) notification.getContext() );
