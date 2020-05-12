@@ -49,6 +49,7 @@ exports._defaults = {
     silent        : false,
     smallIcon     : 'res://icon',
     sound         : true,
+    soundDetached : false,
     sticky        : false,
     summary       : null,
     text          : '',

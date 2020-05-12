@@ -18,6 +18,7 @@ public class SoundManager {
     public static final String RESUME_SOUND = "resumeSound";
     public static final String PLAY_SOUND = "playSound";
     public static final String STOP_SOUND = "stopSound";
+    public static final String SOUND_COMPLETE = "soundComplete";
 
     private static MediaPlayer sound;
 
@@ -46,6 +47,10 @@ public class SoundManager {
 
                     sound = null;
                     soundUri = null;
+
+                    if (canFireEvent( notification)) {
+                        fireEvent(SOUND_COMPLETE, notification);
+                    }
                 }
             });
 
