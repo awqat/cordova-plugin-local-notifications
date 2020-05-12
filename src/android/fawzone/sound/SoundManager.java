@@ -22,8 +22,6 @@ public class SoundManager {
 
     private static MediaPlayer sound;
 
-    private static Uri soundUri;
-
     public static void createSound(Uri aSoundUri, Context context, Notification notification) {
 
         if (sound != null) {
@@ -45,8 +43,13 @@ public class SoundManager {
                     Log.i ("TAG", notification.getId()+"  :  sound complete clearing notification  ");
                     notification.clear();
 
+                    try{
+                        sound.release();
+                    } catch(Exception e){
+                        Log.e(TAG, " playSound :: onCompletion :: sound.release " , e);
+                    }
+
                     sound = null;
-                    soundUri = null;
 
                     if (canFireEvent( notification)) {
                         fireEvent(SOUND_COMPLETE, notification);
