@@ -458,7 +458,7 @@ public final class Options {
     /**
      * Sound file path for the local notification.
      */
-    Uri getSound() {
+    public Uri getSound() {
         return assets.parse(options.optString("sound", null));
     }
 

@@ -92,8 +92,11 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
 
         notification.show();
 
-        //Play Sound
-        SoundManager.playSound(notification, !isUpdate);
+        if(!isUpdate){
+            //Play Sound
+            SoundManager.playSound(notification, true);
+        }
+
 
 
      //  if(isAppRunning()){

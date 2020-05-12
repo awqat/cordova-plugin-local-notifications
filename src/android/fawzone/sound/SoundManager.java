@@ -21,7 +21,9 @@ public class SoundManager {
 
     private static MediaPlayer sound;
 
-    public static void createSound(Uri soundUri, Context context, Notification notification) {
+    private static Uri soundUri;
+
+    public static void createSound(Uri aSoundUri, Context context, Notification notification) {
 
         if (sound != null) {
             try {
@@ -33,7 +35,7 @@ public class SoundManager {
         }
 
         try {
-            sound = MediaPlayer.create(context, soundUri);
+            sound = MediaPlayer.create(context, aSoundUri);
      // TODO   addSoundActions(builder, extras);
 
             sound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -41,6 +43,9 @@ public class SoundManager {
                 public void onCompletion(MediaPlayer mp) {
                     Log.i ("TAG", notification.getId()+"  :  sound complete clearing notification  ");
                     notification.clear();
+
+                    sound = null;
+                    soundUri = null;
                 }
             });
 
@@ -59,13 +64,21 @@ public class SoundManager {
         return notification!=null && isAppRunning();
     }
 
+    public static boolean hasNotificationNoSound(Notification notification){
+        return notification != null && notification.getOptions().getSound() == null;
+    }
+
     public static void playSound(Notification notification, boolean fireEvent){
         Integer id =getNotificationId(notification);
-
         Log.i(TAG," > playSound  "+id);
 
         if(sound == null){
             Log.w(TAG,"    playSound  "+id+"  SOUND IS NULL ");
+            return;
+        }
+
+        if(hasNotificationNoSound(notification)){
+            Log.w(TAG,"    playSound  current notifiaction "+notification.getId()+" HAS NO SOUND ");
             return;
         }
 
