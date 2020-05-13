@@ -421,6 +421,8 @@ public class LocalNotification extends CordovaPlugin {
      */
     private void stopSound(CallbackContext command) {
         SoundManager.stopSound(null, false);
+        //TODO  SME spécifier uniquement les athans
+        clearAll(command);
         command.success();
     }
 

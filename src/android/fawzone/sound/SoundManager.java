@@ -69,7 +69,7 @@ public class SoundManager {
     }
 
     private static boolean canFireEvent(Notification notification){
-        return notification!=null && isAppRunning();
+        return notification!=null;
     }
 
     public static boolean hasNotificationNoSound(Notification notification){
