@@ -75,6 +75,41 @@ public final class AssetUtil {
     }
 
     /**
+     * Determine if playback file is streaming or local.
+     * It is streaming if file name starts with "http://"
+     *
+     * @param aSoundUri              The file uri
+     * @return                  T=streaming, F=local
+     */
+    public static boolean isStreaming(Uri aSoundUri) {
+        String file = aSoundUri.getPath();
+        return isStreaming(file);
+    }
+
+
+    /**
+     * Determine if playback file is streaming or local.
+     * It is streaming if file name starts with "http://"
+     *
+     * @param file              The file
+     * @return                  T=streaming, F=local
+     */
+    public static boolean isStreaming(String file) {
+
+        if(file == null){
+            return false;
+        }
+
+        file = file.toLowerCase();
+
+        if (file.contains("http://") || file.contains("https://") || file.contains("rtsp://")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * The URI for a path.
      *
      * @param path The given path.
@@ -88,8 +123,8 @@ public final class AssetUtil {
             return getUriFromPath(path);
         } else if (path.startsWith("file://")) {
             return getUriFromAsset(path);
-        } else if (path.startsWith("http")){
-            return getUriFromRemote(path);
+        } else if (isStreaming(path)){
+            return new Uri.Builder().path(path).build();
         } else if (path.startsWith("content://")){
             return Uri.parse(path);
         } else {
@@ -179,6 +214,7 @@ public final class AssetUtil {
      *
      * @return Uri of the downloaded file.
      */
+   /*
     private Uri getUriFromRemote(String path) {
         File file = getTmpFile();
 
@@ -216,7 +252,7 @@ public final class AssetUtil {
 
         return Uri.EMPTY;
     }
-
+*/
     /**
      * Copy content from input stream into output stream.
      *
