@@ -39,7 +39,8 @@ public class SoundManager {
 
         @Override
         public void onCompletion(MediaPlayer mp) {
-            Log.i("TAG", notification.getId() + "  :  sound complete clearing notification  ");
+            Log.i(TAG, " > SoundOnPreparedListener.onCompletion  "+notification.getId() );
+
             notification.clear();
 
             try {
@@ -66,12 +67,15 @@ public class SoundManager {
         }
         @Override
         public void onPrepared(MediaPlayer mp) {
+            Log.i(TAG, " > SoundOnPreparedListener.onPrepared  " );
             sound.setOnCompletionListener(new SoundOnCompletionListener(notification));
             // seek to any location received while not prepared
             //this.seekToPlaying(this.seekOnPrepared);
             // If start playing after prepared
             //if (!this.prepareOnly) {
-            sound.start();
+            //sound.start();
+
+            playSound(notification, true);
             //this.setState(STATE.MEDIA_RUNNING);
             //this.seekOnPrepared = 0; //reset only when played
             //} else {
@@ -195,7 +199,7 @@ public class SoundManager {
 
     public static void playSound(Notification notification, boolean fireEvent) {
         Integer id = getNotificationId(notification);
-        Log.i(TAG, " > playSound  " + id);
+       Log.i(TAG, " > playSound  " + id);
 
 
 
