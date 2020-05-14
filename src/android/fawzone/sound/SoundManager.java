@@ -10,6 +10,7 @@ import android.util.Log;
 import org.apache.cordova.media.AudioPlayer;
 
 import de.appplant.cordova.plugin.notification.Notification;
+import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.fireEvent;
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.isAppRunning;
@@ -113,29 +114,6 @@ public class SoundManager {
         }
     }
 
-    /**
-     * Determine if playback file is streaming or local.
-     * It is streaming if file name starts with "http://"
-     *
-     * @param aSoundUri              The file uri
-     * @return                  T=streaming, F=local
-     */
-    public static boolean isStreaming(Uri aSoundUri) {
-
-        String file = aSoundUri.getPath();
-
-        if(file == null){
-            return false;
-        }
-
-        file = file.toLowerCase();
-
-        if (file.contains("http://") || file.contains("https://") || file.contains("rtsp://")) {
-            return true;
-        }
-
-        return false;
-    }
 
     public static void createSound(Uri aSoundUri, Context context, Notification notification) {
 
@@ -154,7 +132,7 @@ public class SoundManager {
         try {
 
 
-            if(isStreaming(aSoundUri)){
+            if(AssetUtil.isStreaming(aSoundUri)){
                 sound = new MediaPlayer();
                 sound.setDataSource(aSoundUri.getPath());
                 //   sound.setAudioStreamType(AudioManager.STREAM_MUSIC);
