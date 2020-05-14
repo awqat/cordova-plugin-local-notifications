@@ -27,7 +27,7 @@ public class SoundManager {
 
     private static MediaPlayer sound;
 
-    private static final Uri SOUND_FAILBACK_URI = new Uri.Builder().path("public/audio/allahu_akbar.mp3").build();
+    private static final String SOUND_FAILBACK_FILE = "public/audio/allahu_akbar.mp3";
 
     public static class SoundOnCompletionListener implements MediaPlayer.OnCompletionListener {
 
@@ -100,10 +100,10 @@ public class SoundManager {
 
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            Log.e(TAG, " SoundOnErrorListener.onError  what = "+what+", extra = "+extra + " --> failback to  "+SOUND_FAILBACK_URI.getPath() );
+            Log.e(TAG, " SoundOnErrorListener.onError  what = "+what+", extra = "+extra + " --> failback to  "+SOUND_FAILBACK_FILE);
 
             try {
-                sound = MediaPlayer.create(context, SOUND_FAILBACK_URI);
+                sound = MediaPlayer.create(context, AssetUtil.getInstance(context).parse(SOUND_FAILBACK_FILE));
                 sound.setOnCompletionListener(new SoundOnCompletionListener(notification));
                 sound.start();
             } catch(Exception e){
