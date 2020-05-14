@@ -111,9 +111,8 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
         AppLauncher.unlockLockScreen(notification);
 
 
-        if(!isAppRunning()){
-            AppLauncher.forceMainActivityReload(notification);
-        }
+        AppLauncher.forceMainActivityReload(notification);
+
 
 
         if (!isUpdate && isAppRunning()) {
