@@ -27,7 +27,7 @@ public class SoundManager {
 
     private static MediaPlayer sound;
 
-    private static final String SOUND_FAILBACK_FILE = "public/audio/allahu_akbar.mp3";
+    private static final String SOUND_FAILBACK_FILE = "public/audio/adhan-ahmed-el-kourdi.mp3";
 
     public static class SoundOnCompletionListener implements MediaPlayer.OnCompletionListener {
 
