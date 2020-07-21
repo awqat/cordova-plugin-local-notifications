@@ -166,7 +166,7 @@ static NSInteger WEEKDAYS[8] = { 0, 2, 3, 4, 5, 6, 7, 1 };
 - (UNNotificationSound*) sound
 {
     NSString* path = dict[@"sound"];
-    NSString* file;
+    NSString* file = path;
 
     if ([path isKindOfClass:NSNumber.class]) {
         return [path boolValue] ? [UNNotificationSound defaultSound] : NULL;
