@@ -244,7 +244,7 @@ public final class Builder {
         reqCode = random.nextInt();
         PendingIntent  intentResume = PendingIntent.getService(context,
                 reqCode, notificationIntentResume, PendingIntent.FLAG_UPDATE_CURRENT  );
-        builder.addAction(new NotificationCompat.Action(android.R.drawable.stat_notify_chat , "Resume" , intentResume));
+        builder.addAction(new NotificationCompat.Action(android.R.drawable.stat_notify_chat , "Play" , intentResume));
     }
 
     /**
