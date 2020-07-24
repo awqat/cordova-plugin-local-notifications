@@ -21,7 +21,6 @@
 
 package de.appplant.cordova.plugin.localnotification;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -35,26 +34,21 @@ import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.Request;
 import de.appplant.cordova.plugin.notification.receiver.AbstractTriggerReceiver;
 
-import static android.app.AlarmManager.RTC;
-import static android.app.AlarmManager.RTC_WAKEUP;
+
 import static android.content.Context.POWER_SERVICE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static android.os.Build.VERSION_CODES.M;
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.fireEvent;
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.isAppRunning;
+
 import static java.util.Calendar.MINUTE;
+import static org.fawzone.sound.SoundManager.PLAY_SOUND;
 
-import android.media.AudioManager;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.widget.Toast;
 import android.util.Log;
 
 import org.fawzone.applauncher.AppLauncher;
 import org.fawzone.ringermode.RingerMode;
+import org.fawzone.sound.SoundManager;
 
 /**
  * The alarm receiver is triggered when a scheduled alarm is fired. This class
@@ -80,6 +74,8 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
         Options options  = notification.getOptions();
         Manager manager  = Manager.getInstance(context);
         int badge        = options.getBadgeNumber();
+        Log.i("TriggerReceiver", " > onTrigger ");
+
 
         if (badge > 0) {
             manager.setBadge(badge);
@@ -96,6 +92,15 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
 
         notification.show();
 
+
+        //AOTO PLAY
+        //if(!isUpdate){
+        //    //Play Sound
+        //    SoundManager.playSound(notification, true);
+        //}
+
+
+
      //  if(isAppRunning()){
      //      AppLauncher.moveToForeground(notification, (Activity) notification.getContext() );
      //  }
@@ -103,13 +108,13 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
        //     AppLauncher.forceMainActivityReload(notification);
   //      }
 
-        AppLauncher.unlockLockScreen(notification);
 
 
-        if(!isAppRunning()){
+        if (!isUpdate) {
+            AppLauncher.unlockLockScreen(notification);
+
             AppLauncher.forceMainActivityReload(notification);
         }
-
 
 
         if (!isUpdate && isAppRunning()) {

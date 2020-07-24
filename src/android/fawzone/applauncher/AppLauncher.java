@@ -102,7 +102,6 @@ public class AppLauncher {
             return;
         }
 
-
         if (!notification.getOptions().getAppLauncherLaunch()) {
             Log.i(TAG, " ! AppLauncher.launch => do nothing  ");
             return;

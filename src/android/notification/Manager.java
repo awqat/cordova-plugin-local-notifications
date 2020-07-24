@@ -54,6 +54,7 @@ import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MIN;
 import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_LOW;
 import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_DEFAULT;
 import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_HIGH;
+import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MAX;
 import static de.appplant.cordova.plugin.notification.Notification.PREF_KEY_ID;
 import static de.appplant.cordova.plugin.notification.Notification.Type.TRIGGERED;
 import de.appplant.cordova.plugin.notification.Options;
@@ -126,8 +127,12 @@ public final class Manager {
 
         NotificationChannel channel = mgr.getNotificationChannel(options.getChannel());
 
-        if (channel != null)
-            return;
+        if (channel != null) {
+           // return; PB if the sound change
+            mgr.deleteNotificationChannel(options.getChannel());
+        }
+
+
 
         switch (options.getPrio()) {
             case PRIORITY_MIN:
@@ -143,12 +148,14 @@ public final class Manager {
                 importance = IMPORTANCE_HIGH;
                 break;
             case PRIORITY_MAX:
-                importance = IMPORTANCE_HIGH;
+                importance = IMPORTANCE_MAX;
                 break;
         }
 
+
         channel = new NotificationChannel(
                 options.getChannel(), options.getChannelDescription(), importance);
+
 		if(!options.isSilent() && importance > IMPORTANCE_DEFAULT) channel.setBypassDnd(true);
 		if(!options.isWithoutLights()) channel.enableLights(true);
 		if(options.isWithVibration()) {
@@ -158,7 +165,7 @@ public final class Manager {
 			channel.enableVibration(true);
 		}
 		channel.setLightColor(options.getLedColor());
-        if(options.isWithoutSound()) {
+        if(options.isWithoutSound() || options.isSoundDetached() ) {
 			channel.setSound(null, null);
 		} else {
 			AudioAttributes audioAttributes = new AudioAttributes.Builder()

@@ -26,6 +26,7 @@ package de.appplant.cordova.plugin.notification;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.Ringtone;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.MessagingStyle.Message;
@@ -180,6 +181,15 @@ public final class Options {
     boolean isSilent() {
         return options.optBoolean("silent", false);
     }
+
+    /**
+     *
+     * @return
+     */
+    boolean isSoundDetached() {
+        return options.optBoolean("soundDetached", false);
+    }
+
 
     /**
      * The group for that notification.
@@ -448,7 +458,7 @@ public final class Options {
     /**
      * Sound file path for the local notification.
      */
-    Uri getSound() {
+    public Uri getSound() {
         return assets.parse(options.optString("sound", null));
     }
 
@@ -582,7 +592,9 @@ public final class Options {
      * Gets the notifications priority.
      */
     int getPrio() {
-        return Math.min(Math.max(options.optInt("priority"), PRIORITY_MIN), PRIORITY_MAX);
+        int prio = options.optInt("priority");
+
+        return Math.min(Math.max(prio, PRIORITY_MIN), PRIORITY_MAX);
     }
 
     /**

@@ -25,17 +25,29 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.MessagingStyle.Message;
 import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
+
+import org.fawzone.sound.PauseSoundReceiver;
+import org.fawzone.sound.ResumeSoundReceiver;
+import org.fawzone.sound.SoundManager;
+import org.fawzone.sound.StopSoundReceiver;
 
 import java.util.List;
 import java.util.Random;
 
+import de.appplant.cordova.plugin.localnotification.ClickReceiver;
+import de.appplant.cordova.plugin.localnotification.LocalNotification;
 import de.appplant.cordova.plugin.notification.action.Action;
+import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static de.appplant.cordova.plugin.notification.Notification.EXTRA_UPDATE;
@@ -143,9 +155,13 @@ public final class Builder {
                 .setTimeoutAfter(options.getTimeout())
                 .setLights(options.getLedColor(), options.getLedOn(), options.getLedOff());
 
-        if (sound != Uri.EMPTY && !isUpdate()) {
-            builder.setSound(sound);
-        }
+
+
+//          Uri athanSound = AssetUtil.getInstance(context).parse("public/audio/adhan-ahmed-el-kourdi.mp3");
+    //    Uri athanSound = AssetUtil.getInstance(context).parse("public/audio/allahu_akbar.mp3");
+
+
+
 
         if (options.isWithProgressBar()) {
             builder.setProgress(
@@ -169,7 +185,66 @@ public final class Builder {
         applyDeleteReceiver(builder);
         applyContentReceiver(builder);
 
-        return new Notification(context, options, builder);
+
+       final Notification notification = new Notification(context, options, builder);
+
+
+        if(sound != Uri.EMPTY  && !isUpdate() ) {
+            if (options.isSoundDetached()) {
+                SoundManager.createSound(sound, context, notification);
+                addSoundActions(builder, extras);
+            } else {
+                builder.setSound(sound);
+            }
+        }
+
+
+
+        //Notification.getCachedBuilder(notification.getId());
+
+        return notification;
+    }
+
+    private void addSoundActions(NotificationCompat.Builder builder, Bundle extras) {
+        int reqCode = random.nextInt();
+
+        final Intent notificationIntentStop = new Intent(context, StopSoundReceiver.class)
+                .putExtra(Notification.EXTRA_ID, options.getId())
+                .putExtra(Action.EXTRA_ID, "CLICK_ACTION_ID")
+                .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        if (extras != null) {
+            notificationIntentStop.putExtras(extras);
+        }
+
+        PendingIntent intentStop = PendingIntent.getService(context,
+                reqCode, notificationIntentStop, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.addAction(new NotificationCompat.Action.Builder(0 , "Stop" , intentStop).build());
+
+
+        final Intent notificationIntentPause = new Intent(context, PauseSoundReceiver.class)
+                .putExtra(Notification.EXTRA_ID, options.getId())
+                .putExtra(Action.EXTRA_ID, Action.CLICK_ACTION_ID)
+                .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+        reqCode = random.nextInt();
+        PendingIntent  intentPause = PendingIntent.getService(context,
+                reqCode, notificationIntentPause, FLAG_UPDATE_CURRENT);
+        builder.addAction(new NotificationCompat.Action(android.R.drawable.star_on , "Pause" , intentPause));
+
+
+        final Intent notificationIntentResume = new Intent(context, ResumeSoundReceiver.class)
+                .putExtra(Notification.EXTRA_ID, options.getId())
+                .putExtra(Action.EXTRA_ID, "STOP_"+Action.CLICK_ACTION_ID)
+                .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+        reqCode = random.nextInt();
+        PendingIntent  intentResume = PendingIntent.getService(context,
+                reqCode, notificationIntentResume, PendingIntent.FLAG_UPDATE_CURRENT  );
+        builder.addAction(new NotificationCompat.Action(android.R.drawable.stat_notify_chat , "Resume" , intentResume));
     }
 
     /**

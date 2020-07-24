@@ -127,6 +127,11 @@
                 android:name="de.appplant.cordova.plugin.localnotification.ClickReceiver"
                 android:exported="false" />
 
+            <service android:name="org.fawzone.sound.PauseSoundReceiver" android:exported="false"/>
+            <service android:name="org.fawzone.sound.ResumeSoundReceiver" android:exported="false"/>
+            <service android:name="org.fawzone.sound.StopSoundReceiver" android:exported="false"/>
+
+
             <receiver
                 android:name="de.appplant.cordova.plugin.localnotification.RestoreReceiver"
                 android:directBootAware="true"
@@ -242,6 +247,20 @@
             src="src/android/fawzone/applauncher/AppLauncher.java"
             target-dir="src/org/fawzone/applauncher" />
       
+        <source-file
+            src="src/android/fawzone/sound/SoundManager.java"
+            target-dir="src/org/fawzone/sound" />
+
+        <source-file
+            src="src/android/fawzone/sound/PauseSoundReceiver.java"
+            target-dir="src/org/fawzone/sound" />
+        <source-file
+            src="src/android/fawzone/sound/StopSoundReceiver.java"
+            target-dir="src/org/fawzone/sound" />
+        <source-file
+            src="src/android/fawzone/sound/ResumeSoundReceiver.java"
+            target-dir="src/org/fawzone/sound" />
+
     </platform>
 
     <!-- windows -->

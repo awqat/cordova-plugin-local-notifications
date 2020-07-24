@@ -52,7 +52,7 @@ public class RestoreReceiver extends AbstractRestoreReceiver {
         Date date     = request.getTriggerDate();
         boolean after = date != null && date.after(new Date());
 
-        if (!after && toast.isHighPrio()) {
+        if (!after /*&& toast.isHighPrio()*/) {
             toast.show();
         } else {
             toast.clear();

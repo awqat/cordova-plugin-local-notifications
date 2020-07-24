@@ -35,6 +35,7 @@ import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
+import org.fawzone.sound.SoundManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +62,8 @@ import static de.appplant.cordova.plugin.notification.Notification.Type.TRIGGERE
 @SuppressWarnings({"Convert2Diamond", "Convert2Lambda"})
 public class LocalNotification extends CordovaPlugin {
 
+    public static final String TAG = "LocalNotification";
+
     // Reference to the web view for static access
     private static WeakReference<CordovaWebView> webView = null;
 
@@ -82,6 +85,8 @@ public class LocalNotification extends CordovaPlugin {
     public void initialize (CordovaInterface cordova, CordovaWebView webView) {
         LocalNotification.webView = new WeakReference<CordovaWebView>(webView);
     }
+
+
 
     /**
      * Called when the activity will start interacting with the user.
@@ -171,6 +176,18 @@ public class LocalNotification extends CordovaPlugin {
                 } else
                 if (action.equals("notifications")) {
                     notifications(args, command);
+                } else
+                if (action.equals("stopSound")){
+                    stopSound(command);
+                }else
+                if (action.equals("pauseSound")){
+                    pauseSound(command);
+                }else
+                if (action.equals("playSound")){
+                    playSound(command);
+                }else
+                if (action.equals("resumeSound")){
+                    resumeSound(command);
                 }
             }
         });
@@ -302,6 +319,9 @@ public class LocalNotification extends CordovaPlugin {
         check(command);
     }
 
+
+
+
     /**
      * Cancel multiple local notifications.
      *
@@ -359,6 +379,54 @@ public class LocalNotification extends CordovaPlugin {
 
         command.success();
     }
+
+    /**
+     * Pause sound
+     *
+     * @param command The callback context used when calling back into
+     *                JavaScript.
+     */
+    private void pauseSound(CallbackContext command) {
+        SoundManager.pauseSound(null, false);
+        command.success();
+    }
+
+    /**
+     * Play sound
+     *
+     * @param command The callback context used when calling back into
+     *                JavaScript.
+     */
+    private void playSound(CallbackContext command) {
+        SoundManager.playSound(null, false);
+        command.success();
+    }
+
+    /**
+     * Resume sound
+     *
+     * @param command The callback context used when calling back into
+     *                JavaScript.
+     */
+    private void resumeSound(CallbackContext command) {
+        SoundManager.resumeSound(null, false);
+        command.success();
+    }
+
+    /**
+     * Stop sound
+     *
+     * @param command The callback context used when calling back into
+     *                JavaScript.
+     */
+    private void stopSound(CallbackContext command) {
+        SoundManager.stopSound(null, false);
+        //TODO  SME spécifier uniquement les athans
+        clearAll(command);
+        command.success();
+    }
+
+
 
     /**
      * Clear all triggered notifications without canceling them.
@@ -523,7 +591,7 @@ public class LocalNotification extends CordovaPlugin {
      * @param event        The event name.
      * @param notification Optional notification to pass with.
      */
-    static void fireEvent (String event, Notification notification) {
+    public static void fireEvent (String event, Notification notification) {
         fireEvent(event, notification, new JSONObject());
     }
 
@@ -534,7 +602,7 @@ public class LocalNotification extends CordovaPlugin {
      * @param toast Optional notification to pass with.
      * @param data  Event object with additional data.
      */
-    static void fireEvent (String event, Notification toast, JSONObject data) {
+    public static void fireEvent (String event, Notification toast, JSONObject data) {
         String params, js;
 
         try {
@@ -609,7 +677,7 @@ public class LocalNotification extends CordovaPlugin {
     /**
      * If the app is running.
      */
-    static boolean isAppRunning() {
+    public static boolean isAppRunning() {
         return webView != null;
     }
 

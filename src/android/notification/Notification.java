@@ -53,16 +53,17 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.M;
 import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
 
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MIN;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_LOW;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MAX;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_HIGH;
+import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
+import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
+import static android.support.v4.app.NotificationCompat.PRIORITY_MIN;
 
 /**
  * Wrapper class around OS notification class. Handles basic operations
  * like show, delete, cancel for a single local notification instance.
  */
 public final class Notification {
+
+    public static final String LOCAL_NOTIFICATION = "local-notification";
 
     // Used to differ notifications by their life cycle state
     public enum Type {
@@ -191,7 +192,7 @@ public final class Notification {
         do {
             Date date = request.getTriggerDate();
 
-            Log.d("local-notification", "Next trigger at: " + date);
+            Log.d(LOCAL_NOTIFICATION, "Next trigger at: " + date);
 
             if (date == null)
                 continue;
@@ -230,25 +231,44 @@ public final class Notification {
                     context, 0, intent, FLAG_CANCEL_CURRENT);
 
             try {
-                switch (options.getPrio()) {
-
-                    case IMPORTANCE_MIN: case IMPORTANCE_LOW:
-                        mgr.setExact(RTC, time, pi);
-                        break;
-                    case IMPORTANCE_MAX: case IMPORTANCE_HIGH:
-                        if (SDK_INT >= M) {
-                            mgr.setExactAndAllowWhileIdle(RTC_WAKEUP, time, pi);
-                        } else {
+                try {
+                    switch (options.getPrio()) {
+                        case PRIORITY_MIN:
+                            Log.d(LOCAL_NOTIFICATION, options.getPrio()+"  --> mgr.setExact(RTC, time, pi); " + date);
                             mgr.setExact(RTC, time, pi);
-                        }
-                        break;
-                    default:
-                        mgr.setExact(RTC_WAKEUP, time, pi);
-                        break;
+                            break;
+                        case PRIORITY_HIGH:
+                            if (SDK_INT >= M) {
+                                Log.d(LOCAL_NOTIFICATION, options.getPrio()+"  -->  mgr.setExactAndAllowWhileIdle(RTC_WAKEUP, time, pi); " + date);
+                                mgr.setExactAndAllowWhileIdle(RTC_WAKEUP, time, pi);
+                            } else {
+                                mgr.setExact(RTC, time, pi);
+                                Log.d(LOCAL_NOTIFICATION, options.getPrio()+"  --> mgr.setExact(RTC, time, pi); " + date);
+                            }
+                            break;
+                        case PRIORITY_MAX:
+                            if (SDK_INT >= M) {
+                                Log.d(LOCAL_NOTIFICATION, options.getPrio()+"  --> mgr.setAlarmClock(new AlarmManager.AlarmClockInfo(time, pi), pi); " + date);
+                                mgr.setAlarmClock(new AlarmManager.AlarmClockInfo(time, null), pi);
+                            } else {
+                                Log.d(LOCAL_NOTIFICATION, options.getPrio()+"  --> mgr.setExact(RTC, time, pi); " + date);
+                                mgr.setExact(RTC, time, pi);
+                            }
+                            break;
+                        default:
+                            Log.d(LOCAL_NOTIFICATION, options.getPrio()+"  --> mgr.setExact(RTC_WAKEUP, time, pi); " + date);
+                            mgr.setExact(RTC_WAKEUP, time, pi);
+                            break;
+                    }
+                } catch (Exception ignore) {
+                    // Samsung devices have a known bug where a 500 alarms limit
+                    // can crash the app
+                    Log.d(LOCAL_NOTIFICATION, " excepton 1 ignored = "+ignore );
                 }
             } catch (Exception ignore) {
                 // Samsung devices have a known bug where a 500 alarms limit
                 // can crash the app
+                Log.d(LOCAL_NOTIFICATION, " excepton 2 ignored = "+ignore );
             }
         }
     }
