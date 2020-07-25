@@ -120,6 +120,7 @@ public class SoundManager {
 
 
     public static void createSound(Uri aSoundUri, Context context, Notification notification) {
+        Log.i(TAG, " > createSound  "+aSoundUri);
 
         if (sound != null) {
             try {
@@ -153,7 +154,7 @@ public class SoundManager {
             //this.setState(AudioPlayer.STATE.MEDIA_STARTING);
             sound.setOnPreparedListener(new SoundOnPreparedListener(notification));
             sound.setOnErrorListener(new SoundOnErrorListener(notification, context));
-            sound.prepareAsync();
+           // sound.prepareAsync();
 
 
             // TODO   addSoundActions(builder, extras);
@@ -196,6 +197,42 @@ public class SoundManager {
     public static boolean hasNotificationNoSound(Notification notification) {
         return notification != null && notification.getOptions().getSound() == null;
     }
+
+    public static void playSoundOnReady(Notification notification, boolean fireEvent) {
+        Integer id = getNotificationId(notification);
+        Log.i(TAG, " > playSoundOnReady  "+id);
+
+        if (sound == null) {
+            Log.w(TAG, "    playSoundOnReady  " + id + "  SOUND IS NULL ");
+            return;
+        }
+
+        if (hasNotificationNoSound(notification)) {
+            Log.w(TAG, "    playSoundOnReady  current notifiaction " + notification.getId() + " HAS NO SOUND ");
+            return;
+        }
+
+        try {
+            if (sound.isPlaying()) {
+                Log.w(TAG, "    playSoundOnReady  " + id + "  SOUND IS PLAYING ");
+                return;
+            }
+
+            sound.prepareAsync();
+
+
+            if (fireEvent && canFireEvent(notification)) {
+                fireEvent(PLAY_SOUND, notification);
+            }
+
+
+        } catch (Exception e) {
+            Log.e(TAG, " playSoundOnReady :: ", e);
+        }
+
+
+    }
+
 
     public static void playSound(Notification notification, boolean fireEvent) {
         Integer id = getNotificationId(notification);

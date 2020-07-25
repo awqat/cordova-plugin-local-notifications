@@ -94,10 +94,10 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
 
 
         //AOTO PLAY
-        //if(!isUpdate){
-        //    //Play Sound
-        //    SoundManager.playSound(notification, true);
-        //}
+        if(!isUpdate){
+            //Play Sound
+            SoundManager.playSoundOnReady(notification, true);
+        }
 
 
 
