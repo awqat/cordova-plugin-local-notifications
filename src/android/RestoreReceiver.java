@@ -53,7 +53,7 @@ public class RestoreReceiver extends AbstractRestoreReceiver {
         boolean after = date != null && date.after(new Date());
 
         if (!after /*&& toast.isHighPrio()*/) {
-            toast.show();
+            //toast.show();
         } else {
             toast.clear();
         }
@@ -80,3 +80,4 @@ public class RestoreReceiver extends AbstractRestoreReceiver {
     }
 
 }
+
