@@ -122,7 +122,19 @@ public final class Builder {
      * @return The final notification to display.
      */
     public Notification build() {
+        return build(true);
+    }
+
+    /**
+     * Creates the notification with all its options passed through JS.
+     *
+     * @return The final notification to display.
+     */
+    public Notification build(boolean doCreateSound) {
         NotificationCompat.Builder builder;
+
+        Log.i("Builder", " > build    " +options.getTitle() + "  "+options.getId());
+
 
         if (options.isSilent()) {
             return new Notification(context, options);
@@ -189,15 +201,18 @@ public final class Builder {
        final Notification notification = new Notification(context, options, builder);
 
 
-        if(sound != Uri.EMPTY  && !isUpdate() ) {
-            if (options.isSoundDetached()) {
-                SoundManager.createSound(sound, context, notification);
-                addSoundActions(builder, extras);
-            } else {
+        if(doCreateSound){
+
+            if(sound != Uri.EMPTY  && !isUpdate() ) {
+                if (options.isSoundDetached()) {
+                    SoundManager.createSound(sound, context, notification);
+                    addSoundActions(builder, extras);
+                }
+            /*else {
                 builder.setSound(sound);
+            }*/
             }
         }
-
 
 
         //Notification.getCachedBuilder(notification.getId());

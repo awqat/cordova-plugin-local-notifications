@@ -32,6 +32,7 @@ import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -125,13 +126,39 @@ public final class Manager {
         if (SDK_INT < O)
             return;
 
-        NotificationChannel channel = mgr.getNotificationChannel(options.getChannel());
+        int lastChannelId =  extractLastChannelId(options.getChannel());
 
-        if (channel != null) {
-           // return; PB if the sound change
-            mgr.deleteNotificationChannel(options.getChannel());
+
+
+
+
+
+        for(int i = 1; i< lastChannelId; i++ ){
+
+            String channelNameOld = "channel_athan_"+i;
+
+            Log.d("MANAGER", " channel  " + channelNameOld);
+
+
+            NotificationChannel channelOld =  mgr.getNotificationChannel(channelNameOld);
+
+            if(channelOld == null){
+                continue;
+            }
+
+            Log.d("MANAGER", " channel  " + channelNameOld + " to delete ... " );
+
+            mgr.deleteNotificationChannel(channelNameOld);
         }
 
+        NotificationChannel channel = mgr.getNotificationChannel(options.getChannel());
+
+
+        if (channel != null) {
+            // return; PB if the sound change
+          //  mgr.deleteNotificationChannel(options.getChannel());
+            return;
+        }
 
 
         switch (options.getPrio()) {
@@ -180,6 +207,24 @@ public final class Manager {
 		}
 
         mgr.createNotificationChannel(channel);
+    }
+
+    protected int extractLastChannelId(String channel) {
+        int _index = channel.lastIndexOf('_');
+
+        if(_index < 0){
+            return 0;
+        }
+
+        String strId =  channel.substring(_index+1);
+
+        try {
+             return Integer.valueOf(strId);
+        } catch(Exception e){
+            Log.e("MANAGER", " extractLastChannelId :: " , e);
+
+            return 0;
+        }
     }
 
     /**

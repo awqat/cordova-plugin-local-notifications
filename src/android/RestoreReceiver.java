@@ -50,13 +50,13 @@ public class RestoreReceiver extends AbstractRestoreReceiver {
     @Override
     public void onRestore (Request request, Notification toast) {
         Date date     = request.getTriggerDate();
-        boolean after = date != null && date.after(new Date());
 
-        if (!after /*&& toast.isHighPrio()*/) {
-            //toast.show();
-        } else {
-            toast.clear();
-        }
+        Date now = new Date();
+
+        boolean after = date != null && date.after(now);
+
+        Log.i("RestoreReceiver", " > onRestore    " + toast.getOptions().getTitle() +"  ===  " +  after+",  now "+now + ", date  "+date);
+
 
         Context ctx = toast.getContext();
         Manager mgr = Manager.getInstance(ctx);
@@ -64,6 +64,8 @@ public class RestoreReceiver extends AbstractRestoreReceiver {
         if (after || toast.isRepeating()) {
             mgr.schedule(request, TriggerReceiver.class);
         }
+
+
     }
 
     /**
@@ -73,10 +75,13 @@ public class RestoreReceiver extends AbstractRestoreReceiver {
      */
     @Override
     public Notification buildNotification (Builder builder) {
+
+        Log.i("RestoreReceiver", " > buildNotification    " + builder);
+
         return builder
                 .setClickActivity(ClickReceiver.class)
                 .setClearReceiver(ClearReceiver.class)
-                .build();
+                .build(false);
     }
 
 }
