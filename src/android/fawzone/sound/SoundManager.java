@@ -195,12 +195,14 @@ public class SoundManager {
     }
 
     public static boolean hasNotificationNoSound(Notification notification) {
-        return notification != null && notification.getOptions().getSound() == null;
+        return notification != null && (notification.getOptions().getSound() == Uri.EMPTY || notification.getOptions().getSound() == null);
     }
-
+    
     public static void playSoundOnReady(Notification notification, boolean fireEvent) {
         Integer id = getNotificationId(notification);
         Log.i(TAG, " > playSoundOnReady  "+id);
+
+
 
         if (sound == null) {
             Log.w(TAG, "    playSoundOnReady  " + id + "  SOUND IS NULL ");
@@ -217,6 +219,9 @@ public class SoundManager {
                 Log.w(TAG, "    playSoundOnReady  " + id + "  SOUND IS PLAYING ");
                 return;
             }
+
+
+
 
             sound.prepareAsync();
 
@@ -353,3 +358,4 @@ public class SoundManager {
 
 
 }
+
