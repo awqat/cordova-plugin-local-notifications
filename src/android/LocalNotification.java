@@ -27,6 +27,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Pair;
 import android.view.View;
 
@@ -35,6 +36,7 @@ import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
+import org.fawzone.applauncher.AppLauncher;
 import org.fawzone.sound.SoundManager;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,6 +77,21 @@ public class LocalNotification extends CordovaPlugin {
 
     // Launch details
     private static Pair<Integer, String> launchDetails;
+
+    @Override
+    protected void pluginInitialize() {
+        super.pluginInitialize();
+
+        Activity activity   = cordova.getActivity();
+        Intent launchIntent = activity.getIntent();
+        String action 		= launchIntent.getAction();
+
+        if ((action != null) && (AppLauncher.ACTION_FORCE_RELOAD_BACKGROUND.equalsIgnoreCase(action))) {
+//            isForceReload = true;
+            activity.moveTaskToBack(true);
+        }
+
+    }
 
     /**
      * Called after plugin construction and fields have been initialized.

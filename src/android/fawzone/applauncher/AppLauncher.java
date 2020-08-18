@@ -26,6 +26,9 @@ public class AppLauncher {
 
     public static final String TAG = "AppLauncher";
 
+
+    public static final String ACTION_FORCE_RELOAD_BACKGROUND = "AppLauncher-forceReloadBackground";
+
     /**
      * Get activity instance from desired context.
      */
@@ -107,13 +110,13 @@ public class AppLauncher {
             return;
         }
 
-        Log.i(TAG, "- Forcing MainActivity reload");
+        Log.i(TAG, ACTION_FORCE_RELOAD_BACKGROUND+" - Forcing MainActivity reload");
         PackageManager pm = notification.getContext().getPackageManager();
         Intent launchIntent = pm.getLaunchIntentForPackage(notification.getContext().getPackageName());
         if (launchIntent == null) {
-            Log.w(TAG, "- forceMainActivityReload failed to find launchIntent");
+            Log.w(TAG, ACTION_FORCE_RELOAD_BACKGROUND+" failed to find launchIntent");
         } else {
-            launchIntent.setAction(TAG+"-forceReload");
+            launchIntent.setAction(ACTION_FORCE_RELOAD_BACKGROUND);
           //  launchIntent.addFlags(4);
           //  launchIntent.addFlags(262144);
           //  launchIntent.addFlags(65536);
