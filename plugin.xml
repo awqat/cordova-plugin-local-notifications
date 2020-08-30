@@ -148,6 +148,38 @@
             <uses-permission android:name="android.permission.WAKE_LOCK" />
         </config-file>
 
+
+        <!-- drawable src/android/resources -->
+        <resource-file src="src/android/res/drawable-anydpi/ic_action_pause.xml" target="res/drawable-anydpi/ic_action_pause.xml" />
+        <resource-file src="src/android/res/drawable-hdpi/ic_action_pause.png" target="res/drawable-hdpi/ic_action_pause.png" />
+        <resource-file src="src/android/res/drawable-mdpi/ic_action_pause.png" target="res/drawable-mdpi/ic_action_pause.png" />
+        <resource-file src="src/android/res/drawable-xhdpi/ic_action_pause.png" target="res/drawable-xhdpi/ic_action_pause.png" />
+        <resource-file src="src/android/res/drawable-xxhdpi/ic_action_pause.png" target="res/drawable-xxhdpi/ic_action_pause.png" />
+
+        <resource-file src="src/android/res/drawable-anydpi/ic_action_play.xml" target="res/drawable-anydpi/ic_action_play.xml" />
+        <resource-file src="src/android/res/drawable-hdpi/ic_action_play.png" target="res/drawable-hdpi/ic_action_play.png" />
+        <resource-file src="src/android/res/drawable-mdpi/ic_action_play.png" target="res/drawable-mdpi/ic_action_play.png" />
+        <resource-file src="src/android/res/drawable-xhdpi/ic_action_play.png" target="res/drawable-xhdpi/ic_action_play.png" />
+        <resource-file src="src/android/res/drawable-xxhdpi/ic_action_play.png" target="res/drawable-xxhdpi/ic_action_play.png" />
+
+        <resource-file src="src/android/res/drawable-anydpi/ic_action_silent.xml" target="res/drawable-anydpi/ic_action_silent.xml" />
+        <resource-file src="src/android/res/drawable-hdpi/ic_action_silent.png" target="res/drawable-hdpi/ic_action_silent.png" />
+        <resource-file src="src/android/res/drawable-mdpi/ic_action_silent.png" target="res/drawable-mdpi/ic_action_silent.png" />
+        <resource-file src="src/android/res/drawable-xhdpi/ic_action_silent.png" target="res/drawable-xhdpi/ic_action_silent.png" />
+        <resource-file src="src/android/res/drawable-xxhdpi/ic_action_silent.png" target="res/drawable-xxhdpi/ic_action_silent.png" />
+
+        <resource-file src="src/android/res/drawable-anydpi/ic_action_stop.xml" target="res/drawable-anydpi/ic_action_stop.xml" />
+        <resource-file src="src/android/res/drawable-hdpi/ic_action_stop.png" target="res/drawable-hdpi/ic_action_stop.png" />
+        <resource-file src="src/android/res/drawable-mdpi/ic_action_stop.png" target="res/drawable-mdpi/ic_action_stop.png" />
+        <resource-file src="src/android/res/drawable-xhdpi/ic_action_stop.png" target="res/drawable-xhdpi/ic_action_stop.png" />
+        <resource-file src="src/android/res/drawable-xxhdpi/ic_action_stop.png" target="res/drawable-xxhdpi/ic_action_stop.png" />
+
+        <resource-file src="src/android/res/drawable-anydpi/ic_action_vibrate.xml" target="res/drawable-anydpi/ic_action_vibrate.xml" />
+        <resource-file src="src/android/res/drawable-hdpi/ic_action_vibrate.png" target="res/drawable-hdpi/ic_action_vibrate.png" />
+        <resource-file src="src/android/res/drawable-mdpi/ic_action_vibrate.png" target="res/drawable-mdpi/ic_action_vibrate.png" />
+        <resource-file src="src/android/res/drawable-xhdpi/ic_action_vibrate.png" target="res/drawable-xhdpi/ic_action_vibrate.png" />
+        <resource-file src="src/android/res/drawable-xxhdpi/ic_action_vibrate.png" target="res/drawable-xxhdpi/ic_action_vibrate.png" />
+
         <source-file
             src="src/android/xml/localnotification_provider_paths.xml"
             target-dir="res/xml" />
@@ -235,6 +267,11 @@
         <source-file
             src="src/android/notification/Request.java"
             target-dir="src/de/appplant/cordova/plugin/notification" />
+
+
+        <source-file
+            src="src/android/fawzone/util/Utils.java"
+            target-dir="src/org/fawzone/util" />
 
 
         <source-file
