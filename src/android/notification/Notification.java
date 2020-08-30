@@ -124,6 +124,10 @@ public final class Notification {
        this.builder.setLargeIcon(icon);
     }
 
+    public void setSmallIcon(int icon){
+        this.builder.setSmallIcon(icon);
+    }
+
     /**
      * Get application context.
      */

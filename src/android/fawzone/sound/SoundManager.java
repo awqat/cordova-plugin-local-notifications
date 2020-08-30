@@ -2,18 +2,18 @@ package org.fawzone.sound;
 
 import android.content.Context;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
-import org.apache.cordova.media.AudioPlayer;
+
+import org.fawzone.util.Utils;
 
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.fireEvent;
-import static de.appplant.cordova.plugin.localnotification.LocalNotification.isAppRunning;
 
 public class SoundManager {
 
@@ -75,7 +75,7 @@ public class SoundManager {
             //if (!this.prepareOnly) {
             //sound.start();
 
-            playSound(notification, true);
+            playSound(notification,true);
             //this.setState(STATE.MEDIA_RUNNING);
             //this.seekOnPrepared = 0; //reset only when played
             //} else {
@@ -127,6 +127,8 @@ public class SoundManager {
                 Log.w(TAG, "    createSound OLD SOUND IS NOT NULL ==> release ...");
                 if(sound.isPlaying()){
                     sound.stop();
+
+
                 }
                 sound.release();
             } catch (Exception e) {
@@ -187,15 +189,15 @@ public class SoundManager {
 
 
     private static Integer getNotificationId(Notification notification) {
-        return notification != null ? notification.getId() : null;
+        return notification != null ? ( notification.getOptions()!=null ? notification.getId(): null) : null;
     }
 
     private static boolean canFireEvent(Notification notification) {
-        return notification != null;
+        return notification != null && notification.getOptions() != null;
     }
 
     public static boolean hasNotificationNoSound(Notification notification) {
-        return notification != null && (notification.getOptions().getSound() == Uri.EMPTY || notification.getOptions().getSound() == null);
+        return notification != null && notification.getOptions() != null && (notification.getOptions().getSound() == Uri.EMPTY || notification.getOptions().getSound() == null);
     }
     
     public static void playSoundOnReady(Notification notification, boolean fireEvent) {
@@ -276,6 +278,8 @@ public class SoundManager {
     }
 
 
+
+
     public static void stopSound(Notification notification, boolean fireEvent) {
         Integer id = getNotificationId(notification);
 
@@ -297,6 +301,9 @@ public class SoundManager {
             if (fireEvent && canFireEvent(notification)) {
                 fireEvent(STOP_SOUND, notification);
             }
+
+            Utils.displayToast(notification.getContext(), "STOP", "res://ic_action_stop.png" , Toast.LENGTH_SHORT);
+
 //TODO             sound.release();
         } catch (Exception e) {
             Log.e(TAG, " stopSound :: ", e);
@@ -320,13 +327,23 @@ public class SoundManager {
             }
             sound.pause();
 
+
+          //  Toast toast0 = Toast.makeText(notification.getContext(), "PausedEEEEEEE", Toast.LENGTH_LONG); // For example
+          //  toast0.show();
+
             if (fireEvent && canFireEvent(notification)) {
                 fireEvent(PAUSE_SOUND, notification);
             }
+
+            Utils.displayToast(notification.getContext(), "PAUSE", "res://ic_action_pause.png" , Toast.LENGTH_SHORT);
+
         } catch (Exception e) {
             Log.e(TAG, " pauseSound :: ", e);
         }
     }
+
+
+
 
     public static void resumeSound(Notification notification, boolean fireEvent) {
         Integer id = getNotificationId(notification);
@@ -347,9 +364,14 @@ public class SoundManager {
             sound.seekTo(sound.getCurrentPosition());
             sound.start();
 
+
             if (fireEvent && canFireEvent(notification)) {
                 fireEvent(RESUME_SOUND, notification);
             }
+
+            Utils.displayToast(notification.getContext(), "PLAY", "res://ic_action_play.png" , Toast.LENGTH_SHORT);
+
+
 
         } catch (Exception e) {
             Log.e(TAG, " resumeSound :: ", e);

@@ -150,6 +150,8 @@ public class LocalNotification extends CordovaPlugin {
             return true;
         }
 
+        Context context = this.cordova.getContext();
+
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 if (action.equals("ready")) {
@@ -195,16 +197,16 @@ public class LocalNotification extends CordovaPlugin {
                     notifications(args, command);
                 } else
                 if (action.equals("stopSound")){
-                    stopSound(command);
+                    stopSound(command, context);
                 }else
                 if (action.equals("pauseSound")){
-                    pauseSound(command);
+                    pauseSound(command, context);
                 }else
                 if (action.equals("playSound")){
-                    playSound(command);
+                    playSound(command, context);
                 }else
                 if (action.equals("resumeSound")){
-                    resumeSound(command);
+                    resumeSound(command, context);
                 }
             }
         });
@@ -403,8 +405,10 @@ public class LocalNotification extends CordovaPlugin {
      * @param command The callback context used when calling back into
      *                JavaScript.
      */
-    private void pauseSound(CallbackContext command) {
-        SoundManager.pauseSound(null, false);
+    private void pauseSound(CallbackContext command, Context context) {
+        Notification notification = new Notification(context, null);
+
+        SoundManager.pauseSound(notification, false);
         command.success();
     }
 
@@ -414,8 +418,10 @@ public class LocalNotification extends CordovaPlugin {
      * @param command The callback context used when calling back into
      *                JavaScript.
      */
-    private void playSound(CallbackContext command) {
-        SoundManager.playSound(null, false);
+    private void playSound(CallbackContext command, Context context) {
+        Notification notification = new Notification(context, null);
+
+        SoundManager.playSound(notification, false);
         command.success();
     }
 
@@ -425,8 +431,10 @@ public class LocalNotification extends CordovaPlugin {
      * @param command The callback context used when calling back into
      *                JavaScript.
      */
-    private void resumeSound(CallbackContext command) {
-        SoundManager.resumeSound(null, false);
+    private void resumeSound(CallbackContext command, Context context) {
+        Notification notification = new Notification(context, null);
+
+        SoundManager.resumeSound(notification,false);
         command.success();
     }
 
@@ -436,8 +444,11 @@ public class LocalNotification extends CordovaPlugin {
      * @param command The callback context used when calling back into
      *                JavaScript.
      */
-    private void stopSound(CallbackContext command) {
-        SoundManager.stopSound(null, false);
+    private void stopSound(CallbackContext command, Context context) {
+        Notification notification = new Notification(context, null);
+
+
+        SoundManager.stopSound(notification,  false);
         //TODO  SME spécifier uniquement les athans
         clearAll(command);
         command.success();

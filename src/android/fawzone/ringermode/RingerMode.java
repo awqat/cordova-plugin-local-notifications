@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import capacitor.android.plugins.R;
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.Request;
@@ -56,7 +57,11 @@ public class RingerMode {
 
             audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
 
-            notification.setLargeIcon(options.getRingerModeVibrateIconVibrate());
+
+
+           //notification.setLargeIcon(options.getRingerModeVibrateIconVibrate());
+
+            notification.setSmallIcon(R.drawable.ic_action_vibrate);
 
 
             Log.e(TAG, "  schedule retore ringer mode normal ... ");

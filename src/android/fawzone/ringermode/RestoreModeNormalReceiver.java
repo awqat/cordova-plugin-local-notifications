@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import capacitor.android.plugins.R;
 import de.appplant.cordova.plugin.localnotification.TriggerReceiver;
 import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
@@ -106,6 +107,7 @@ public class RestoreModeNormalReceiver extends BroadcastReceiver {
             JSONObject update  = new JSONObject();
             update.put("icon", iconRingerModeNormal);
             update.put("text", msgRingerModeNormalRestored);
+
 
             int id             =  toastId;
             Notification notification = manager.update(id, update, TriggerReceiver.class);

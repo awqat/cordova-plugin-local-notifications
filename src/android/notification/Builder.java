@@ -44,6 +44,7 @@ import org.fawzone.sound.StopSoundReceiver;
 import java.util.List;
 import java.util.Random;
 
+import capacitor.android.plugins.R;
 import de.appplant.cordova.plugin.localnotification.ClickReceiver;
 import de.appplant.cordova.plugin.localnotification.LocalNotification;
 import de.appplant.cordova.plugin.notification.action.Action;
@@ -235,7 +236,7 @@ public final class Builder {
         PendingIntent intentStop = PendingIntent.getService(context,
                 reqCode, notificationIntentStop, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.addAction(new NotificationCompat.Action.Builder(0 , "Stop" , intentStop).build());
+        builder.addAction(new NotificationCompat.Action.Builder(R.drawable.ic_action_stop , "Stop" , intentStop).build());
 
 
         final Intent notificationIntentPause = new Intent(context, PauseSoundReceiver.class)
@@ -246,8 +247,8 @@ public final class Builder {
 
         reqCode = random.nextInt();
         PendingIntent  intentPause = PendingIntent.getService(context,
-                reqCode, notificationIntentPause, FLAG_UPDATE_CURRENT);
-        builder.addAction(new NotificationCompat.Action(android.R.drawable.star_on , "Pause" , intentPause));
+                reqCode, notificationIntentPause, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_pause , "Pause" , intentPause));
 
 
         final Intent notificationIntentResume = new Intent(context, ResumeSoundReceiver.class)
@@ -259,7 +260,10 @@ public final class Builder {
         reqCode = random.nextInt();
         PendingIntent  intentResume = PendingIntent.getService(context,
                 reqCode, notificationIntentResume, PendingIntent.FLAG_UPDATE_CURRENT  );
-        builder.addAction(new NotificationCompat.Action(android.R.drawable.stat_notify_chat , "Play" , intentResume));
+        builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_play, "Play" , intentResume));
+
+        builder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
+                .setShowActionsInCompactView(0, 1, 2));
     }
 
     /**
