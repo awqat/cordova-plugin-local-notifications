@@ -232,6 +232,15 @@ public final class Options {
     }
 
 
+    public boolean getAppLauncherBackground(){
+        if(options
+                .optJSONObject("appLauncher") == null){
+            return false;
+        }
+        return options.optJSONObject("appLauncher").optBoolean("background", false);
+    }
+
+
     /**
      * Gets the value for the timeout flag.
      */

@@ -111,22 +111,26 @@ public class AppLauncher {
         }
 
         Log.i(TAG, ACTION_FORCE_RELOAD_BACKGROUND+" - Forcing MainActivity reload");
-        PackageManager pm = notification.getContext().getPackageManager();
-        Intent launchIntent = pm.getLaunchIntentForPackage(notification.getContext().getPackageName());
+        final PackageManager pm = notification.getContext().getPackageManager();
+        final Intent launchIntent = pm.getLaunchIntentForPackage(notification.getContext().getPackageName());
         if (launchIntent == null) {
             Log.w(TAG, ACTION_FORCE_RELOAD_BACKGROUND+" failed to find launchIntent");
-        } else {
-            launchIntent.setAction(ACTION_FORCE_RELOAD_BACKGROUND);
-          //  launchIntent.addFlags(4);
-          //  launchIntent.addFlags(262144);
-          //  launchIntent.addFlags(65536);
-
-            launchIntent.addFlags(Intent.FLAG_FROM_BACKGROUND);//4->FLAG_FROM_BACKGROUND
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);//262144->FLAG_ACTIVITY_NO_USER_ACTION
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);//65536->FLAG_ACTIVITY_NO_ANIMATION
-
-            notification.getContext().startActivity(launchIntent);
+            return;
         }
+
+        if(notification.getOptions().getAppLauncherBackground()){
+            Log.i(TAG, "  AppLauncher.background => run in background  ");
+            launchIntent.setAction(ACTION_FORCE_RELOAD_BACKGROUND);
+        } else {
+            Log.i(TAG, "  ! AppLauncher.background => run in foreground  ");
+        }
+
+        launchIntent.addFlags(Intent.FLAG_FROM_BACKGROUND);//4->FLAG_FROM_BACKGROUND
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);//262144->FLAG_ACTIVITY_NO_USER_ACTION
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);//65536->FLAG_ACTIVITY_NO_ANIMATION
+
+        notification.getContext().startActivity(launchIntent);
+
     }
 
 
