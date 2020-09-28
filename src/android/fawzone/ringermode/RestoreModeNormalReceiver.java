@@ -108,9 +108,7 @@ public class RestoreModeNormalReceiver extends BroadcastReceiver {
             update.put("icon", iconRingerModeNormal);
             update.put("text", msgRingerModeNormalRestored);
 
-
-            int id             =  toastId;
-            Notification notification = manager.update(id, update, TriggerReceiver.class);
+            manager.update(toastId, update, TriggerReceiver.class);
 
 
         } catch (Exception e) {
