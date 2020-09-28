@@ -24,7 +24,8 @@ public class VibrationManager {
 
     public static final String PLAY_VIBRATION = "playVibration";
     public static final String STOP_VIBRATION = "stopVibration";
-    public static final long[] M_VIBRATE_PATTERN = {0, 400, 800, 600, 800, 800, 800, 1000, 400, 800, 600, 800, 800, 800, 1000};
+    public static final long[] M_VIBRATE_PATTERN = {0, 400, 800, 600, 800, 800, 800, 1000};
+    public static final int M_VIBRATE_REPEAT = 3;
 
     private static Vibrator vibrator;
 
@@ -32,8 +33,6 @@ public class VibrationManager {
     public static void createVibration(Context context, Notification notification) {
         Log.i(TAG, " > createVibration  ");
 
-
-        
         if (vibrator != null) {
             try {
                 Log.w(TAG, "    createVibration OLD VIBRATOR IS NOT NULL ==> cancel ...");
@@ -55,8 +54,6 @@ public class VibrationManager {
         Integer id = Utils.getNotificationId(notification);
         Log.i(TAG, " > playVibration  " + id);
 
-
-
         if (!Utils.hasNotificationVibration(notification)) {
             Log.w(TAG, "    playVibration  current notifiaction" + notification.getId() + " HAS  no vibration  ");
             return;
@@ -71,19 +68,29 @@ public class VibrationManager {
             return;
         }
 
+
         try {
+
+            if(!vibrator.hasVibrator()){
+                Log.i(TAG, " > playVibration hasVibrator false  " + id);
+                return;
+            }
+
+            vibrator.cancel();
+
+
             // Vibrate for 500 milliseconds
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 //vibrator.vibrate(VibrationEffect.createOneShot(20000, VibrationEffect.DEFAULT_AMPLITUDE));
                 Log.i(TAG, " > playVibration Build.VERSION.SDK_INT >= Build.VERSION_CODES.O  " + id);
                 long[] mVibratePattern = M_VIBRATE_PATTERN;
-                vibrator.vibrate(VibrationEffect.createWaveform(mVibratePattern , 3 ) );
+                vibrator.vibrate(VibrationEffect.createWaveform(mVibratePattern , M_VIBRATE_REPEAT ) );
             } else {
                 Log.i(TAG, " > playVibration Build.VERSION.SDK_INT < Build.VERSION_CODES.O  deprecated in API 26 " + id);
                 //deprecated in API 26
 
                 long[] mVibratePattern = M_VIBRATE_PATTERN;
-                vibrator.vibrate(mVibratePattern, 3);
+                vibrator.vibrate(mVibratePattern, M_VIBRATE_REPEAT);
 
 
             }
