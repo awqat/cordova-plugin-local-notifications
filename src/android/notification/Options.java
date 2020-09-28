@@ -192,6 +192,15 @@ public final class Options {
 
 
     /**
+     *
+     * @return
+     */
+    public int getSoundVolume() {
+        return options.optInt("soundVolume", -1);
+    }
+
+
+    /**
      * The group for that notification.
      */
     String getGroup() {
@@ -519,6 +528,13 @@ public final class Options {
      */
     public boolean isWithVibration() {
         return options.optBoolean("vibrate", true);
+    }
+
+    /**
+     * If Add Pause Play Actions.
+     */
+    public boolean isWithPausePlayActions() {
+        return options.optBoolean("showPausePlayActions", false);
     }
 
     /**

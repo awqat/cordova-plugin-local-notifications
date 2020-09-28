@@ -49,6 +49,7 @@ import android.util.Log;
 import org.fawzone.applauncher.AppLauncher;
 import org.fawzone.ringermode.RingerMode;
 import org.fawzone.sound.SoundManager;
+import org.fawzone.vibration.VibrationManager;
 
 /**
  * The alarm receiver is triggered when a scheduled alarm is fired. This class

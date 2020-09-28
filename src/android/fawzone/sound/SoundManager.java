@@ -2,14 +2,20 @@ package org.fawzone.sound;
 
 import android.content.Context;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
 
+import org.apache.cordova.LOG;
 import org.fawzone.util.Utils;
+import org.fawzone.vibration.VibrationManager;
+import org.json.JSONObject;
 
+import de.appplant.cordova.plugin.localnotification.TriggerReceiver;
+import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
@@ -41,9 +47,19 @@ public class SoundManager {
         public void onCompletion(MediaPlayer mp) {
             Log.i(TAG, " > SoundOnPreparedListener.onCompletion  "+notification.getId() );
 
-            notification.clear();
-
             try {
+
+                //notification.clear();
+                Manager manager =Manager.getInstance(notification.getContext());
+
+                JSONObject update  = new JSONObject();
+                //update.put("icon", iconRingerModeNormal);
+                update.put("sound", null);
+                update.put("soundDetached", false);
+
+                manager.update(notification.getId(), update, TriggerReceiver.class);
+
+
                 sound.release();
             } catch (Exception e) {
                 Log.e(TAG, " playSound :: onCompletion :: sound.release ", e);
@@ -51,7 +67,7 @@ public class SoundManager {
 
             sound = null;
 
-            if (canFireEvent(notification)) {
+            if (Utils.canFireEvent(notification)) {
                 fireEvent(SOUND_COMPLETE, notification);
             }
         }
@@ -188,30 +204,18 @@ public class SoundManager {
     }
 
 
-    private static Integer getNotificationId(Notification notification) {
-        return notification != null ? ( notification.getOptions()!=null ? notification.getId(): null) : null;
-    }
-
-    private static boolean canFireEvent(Notification notification) {
-        return notification != null && notification.getOptions() != null;
-    }
-
-    public static boolean hasNotificationNoSound(Notification notification) {
-        return notification != null && notification.getOptions() != null && (notification.getOptions().getSound() == Uri.EMPTY || notification.getOptions().getSound() == null);
-    }
-    
     public static void playSoundOnReady(Notification notification, boolean fireEvent) {
-        Integer id = getNotificationId(notification);
+        Integer id = Utils.getNotificationId(notification);
         Log.i(TAG, " > playSoundOnReady  "+id);
 
-
+        VibrationManager.playVibration(notification, fireEvent);
 
         if (sound == null) {
             Log.w(TAG, "    playSoundOnReady  " + id + "  SOUND IS NULL ");
             return;
         }
 
-        if (hasNotificationNoSound(notification)) {
+        if (Utils.hasNotificationNoSound(notification)) {
             Log.w(TAG, "    playSoundOnReady  current notifiaction " + notification.getId() + " HAS NO SOUND ");
             return;
         }
@@ -222,16 +226,13 @@ public class SoundManager {
                 return;
             }
 
-
-
-
             sound.prepareAsync();
 
-
-            if (fireEvent && canFireEvent(notification)) {
+            if (fireEvent && Utils.canFireEvent(notification)) {
                 fireEvent(PLAY_SOUND, notification);
             }
 
+            setSoundVolume(notification);
 
         } catch (Exception e) {
             Log.e(TAG, " playSoundOnReady :: ", e);
@@ -240,9 +241,38 @@ public class SoundManager {
 
     }
 
+    private static void setSoundVolume(Notification notification) {
+        final AudioManager manager = (AudioManager)notification.getContext().getSystemService(Context.AUDIO_SERVICE);
+        final int soundVolume = notification.getOptions().getSoundVolume();
+
+        Log.i(TAG, "    setSoundVolume notifiaction " + notification.getId() + " soundVolume "+soundVolume);
+
+        if(soundVolume<=0){
+            return;
+        }
+
+        final int volumeToSet = getVolumeToSet(manager, soundVolume);
+        Log.i(TAG, "    setSoundVolume notifiaction " + notification.getId() + " volumeToSet "+volumeToSet);
+        //sound.setVolume(volumeToSet, volumeToSet);
+        manager.setStreamVolume(AudioManager.STREAM_MUSIC, volumeToSet,  AudioManager.FLAG_PLAY_SOUND );
+    }
+
+
+    private static int getVolumeToSet(AudioManager manager, int percent) {
+        try {
+            int volLevel;
+            int maxVolume = manager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            volLevel = Math.round((percent * maxVolume) / 100);
+
+            return volLevel;
+        } catch (Exception e){
+            LOG.d(TAG, "Error getting VolumeToSet: " + e);
+            return 1;
+        }
+    }
 
     public static void playSound(Notification notification, boolean fireEvent) {
-        Integer id = getNotificationId(notification);
+        Integer id = Utils.getNotificationId(notification);
        Log.i(TAG, " > playSound  " + id);
 
 
@@ -252,13 +282,12 @@ public class SoundManager {
             return;
         }
 
-
-
-        if (hasNotificationNoSound(notification)) {
+        if (Utils.hasNotificationNoSound(notification)) {
             Log.w(TAG, "    playSound  current notifiaction " + notification.getId() + " HAS NO SOUND ");
             return;
         }
 
+        setSoundVolume(notification);
         try {
             if (sound.isPlaying()) {
                 Log.w(TAG, "    playSound  " + id + "  SOUND IS PLAYING ");
@@ -267,7 +296,7 @@ public class SoundManager {
 
             sound.start();
 
-            if (fireEvent && canFireEvent(notification)) {
+            if (fireEvent && Utils.canFireEvent(notification)) {
                 fireEvent(PLAY_SOUND, notification);
             }
 
@@ -281,9 +310,11 @@ public class SoundManager {
 
 
     public static void stopSound(Notification notification, boolean fireEvent) {
-        Integer id = getNotificationId(notification);
+        Integer id = Utils.getNotificationId(notification);
 
         Log.i(TAG, " > stopSound  " + id);
+
+        VibrationManager.stopVibration(notification, fireEvent);
 
         if (sound == null) {
             Log.w(TAG, "    stopSound  " + id + "  SOUND IS NULL ");
@@ -298,7 +329,7 @@ public class SoundManager {
 
             sound.stop();
 
-            if (fireEvent && canFireEvent(notification)) {
+            if (fireEvent && Utils.canFireEvent(notification)) {
                 fireEvent(STOP_SOUND, notification);
             }
 
@@ -311,9 +342,11 @@ public class SoundManager {
     }
 
     public static void pauseSound(Notification notification, boolean fireEvent) {
-        Integer id = getNotificationId(notification);
+        Integer id = Utils.getNotificationId(notification);
 
         Log.i(TAG, " > pauseSound  " + id);
+
+        VibrationManager.stopVibration(notification, fireEvent);
 
         if (sound == null) {
             Log.w(TAG, "    pauseSound  " + id + "  SOUND IS NULL ");
@@ -331,7 +364,7 @@ public class SoundManager {
           //  Toast toast0 = Toast.makeText(notification.getContext(), "PausedEEEEEEE", Toast.LENGTH_LONG); // For example
           //  toast0.show();
 
-            if (fireEvent && canFireEvent(notification)) {
+            if (fireEvent && Utils.canFireEvent(notification)) {
                 fireEvent(PAUSE_SOUND, notification);
             }
 
@@ -346,9 +379,11 @@ public class SoundManager {
 
 
     public static void resumeSound(Notification notification, boolean fireEvent) {
-        Integer id = getNotificationId(notification);
+        Integer id = Utils.getNotificationId(notification);
 
         Log.i(TAG, " > stopSound  " + id);
+
+        VibrationManager.stopVibration(notification, fireEvent);
 
         if (sound == null) {
             Log.w(TAG, "    stopSound  " + id + "  SOUND IS NULL ");
@@ -365,7 +400,7 @@ public class SoundManager {
             sound.start();
 
 
-            if (fireEvent && canFireEvent(notification)) {
+            if (fireEvent && Utils.canFireEvent(notification)) {
                 fireEvent(RESUME_SOUND, notification);
             }
 

@@ -40,6 +40,7 @@ import org.fawzone.sound.PauseSoundReceiver;
 import org.fawzone.sound.ResumeSoundReceiver;
 import org.fawzone.sound.SoundManager;
 import org.fawzone.sound.StopSoundReceiver;
+import org.fawzone.vibration.VibrationManager;
 
 import java.util.List;
 import java.util.Random;
@@ -201,13 +202,19 @@ public final class Builder {
 
        final Notification notification = new Notification(context, options, builder);
 
+        if(options.isWithVibration()){
+           // builder.setVibrate(VibrationManager.M_VIBRATE_PATTERN);
+            VibrationManager.createVibration(context, notification);
+        }
+
+
 
         if(doCreateSound){
 
             if(sound != Uri.EMPTY  && !isUpdate() ) {
                 if (options.isSoundDetached()) {
                     SoundManager.createSound(sound, context, notification);
-                    addSoundActions(builder, extras);
+                    addSoundActions(builder, extras, options.isWithPausePlayActions());
                 }
             /*else {
                 builder.setSound(sound);
@@ -221,7 +228,7 @@ public final class Builder {
         return notification;
     }
 
-    private void addSoundActions(NotificationCompat.Builder builder, Bundle extras) {
+    private void addSoundActions(NotificationCompat.Builder builder, Bundle extras, boolean withPausePlayActions) {
         int reqCode = random.nextInt();
 
         final Intent notificationIntentStop = new Intent(context, StopSoundReceiver.class)
@@ -236,34 +243,49 @@ public final class Builder {
         PendingIntent intentStop = PendingIntent.getService(context,
                 reqCode, notificationIntentStop, PendingIntent.FLAG_UPDATE_CURRENT);
 
+
+        builder.setDeleteIntent(intentStop);
+
+
         builder.addAction(new NotificationCompat.Action.Builder(R.drawable.ic_action_stop , "Stop" , intentStop).build());
 
 
-        final Intent notificationIntentPause = new Intent(context, PauseSoundReceiver.class)
-                .putExtra(Notification.EXTRA_ID, options.getId())
-                .putExtra(Action.EXTRA_ID, Action.CLICK_ACTION_ID)
-                .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
-                .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        if(withPausePlayActions) {
 
-        reqCode = random.nextInt();
-        PendingIntent  intentPause = PendingIntent.getService(context,
-                reqCode, notificationIntentPause, PendingIntent.FLAG_CANCEL_CURRENT);
-        builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_pause , "Pause" , intentPause));
+           final Intent notificationIntentPause = new Intent(context, PauseSoundReceiver.class)
+                   .putExtra(Notification.EXTRA_ID, options.getId())
+                   .putExtra(Action.EXTRA_ID, Action.CLICK_ACTION_ID)
+                   .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                   .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+           reqCode = random.nextInt();
+           PendingIntent intentPause = PendingIntent.getService(context,
+                   reqCode, notificationIntentPause, PendingIntent.FLAG_CANCEL_CURRENT);
+           builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_pause, "Pause", intentPause));
 
 
-        final Intent notificationIntentResume = new Intent(context, ResumeSoundReceiver.class)
-                .putExtra(Notification.EXTRA_ID, options.getId())
-                .putExtra(Action.EXTRA_ID, "STOP_"+Action.CLICK_ACTION_ID)
-                .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
-                .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+           final Intent notificationIntentResume = new Intent(context, ResumeSoundReceiver.class)
+                   .putExtra(Notification.EXTRA_ID, options.getId())
+                   .putExtra(Action.EXTRA_ID, "STOP_" + Action.CLICK_ACTION_ID)
+                   .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                   .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-        reqCode = random.nextInt();
-        PendingIntent  intentResume = PendingIntent.getService(context,
-                reqCode, notificationIntentResume, PendingIntent.FLAG_UPDATE_CURRENT  );
-        builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_play, "Play" , intentResume));
+           reqCode = random.nextInt();
+           PendingIntent intentResume = PendingIntent.getService(context,
+                   reqCode, notificationIntentResume, PendingIntent.FLAG_UPDATE_CURRENT);
+           builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_play, "Play", intentResume));
+
+        }
+
+        int[] ids = {0};
+
+        if(withPausePlayActions){
+            ids = new int[] {0, 1, 2};
+
+        }
 
         builder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
-                .setShowActionsInCompactView(0, 1, 2));
+                .setShowActionsInCompactView(ids));
     }
 
     /**

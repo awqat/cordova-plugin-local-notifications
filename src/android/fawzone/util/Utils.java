@@ -1,15 +1,36 @@
 package org.fawzone.util;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
 public class Utils {
+
+
+
+    public static Integer getNotificationId(Notification notification) {
+        return notification != null ? ( notification.getOptions()!=null ? notification.getId(): null) : null;
+    }
+
+    public static boolean canFireEvent(Notification notification) {
+        return notification != null && notification.getOptions() != null;
+    }
+
+    public static boolean hasNotificationNoSound(Notification notification) {
+        return notification != null && notification.getOptions() != null && (notification.getOptions().getSound() == Uri.EMPTY || notification.getOptions().getSound() == null);
+    }
+
+    public static boolean hasNotificationVibration(Notification notification) {
+        return notification != null && notification.getOptions() != null && (notification.getOptions().isWithVibration());
+    }
+
 
     public static void displayToast(Context context, String text, String imageUri,int duration){
 

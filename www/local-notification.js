@@ -50,6 +50,8 @@ exports._defaults = {
     smallIcon     : 'res://icon',
     sound         : true,
     soundDetached : false,
+    soundVolume   : -1,
+    showPausePlayActions: false,
     sticky        : false,
     summary       : null,
     text          : '',
