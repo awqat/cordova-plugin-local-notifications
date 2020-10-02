@@ -42,8 +42,11 @@ import org.fawzone.sound.SoundManager;
 import org.fawzone.sound.StopSoundReceiver;
 import org.fawzone.vibration.VibrationManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import capacitor.android.plugins.R;
 import de.appplant.cordova.plugin.localnotification.ClickReceiver;
@@ -211,10 +214,13 @@ public final class Builder {
 
         if(doCreateSound){
 
-            if(sound != Uri.EMPTY  && !isUpdate() ) {
+            if(sound != Uri.EMPTY ) {
                 if (options.isSoundDetached()) {
-                    SoundManager.createSound(sound, context, notification);
-                    addSoundActions(builder, extras, options.isWithPausePlayActions());
+
+                    if(!isUpdate()) {
+                        SoundManager.createSound(sound, context, notification);
+                    }
+                    addSoundActions(builder, extras, options);
                 }
             /*else {
                 builder.setSound(sound);
@@ -228,48 +234,57 @@ public final class Builder {
         return notification;
     }
 
-    private void addSoundActions(NotificationCompat.Builder builder, Bundle extras, boolean withPausePlayActions) {
+    private void addSoundActions(NotificationCompat.Builder builder, Bundle extras, Options options) {
         int reqCode = random.nextInt();
 
-        final Intent notificationIntentStop = new Intent(context, StopSoundReceiver.class)
-                .putExtra(Notification.EXTRA_ID, options.getId())
-                .putExtra(Action.EXTRA_ID, "CLICK_ACTION_ID")
-                .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
-                .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        if (extras != null) {
-            notificationIntentStop.putExtras(extras);
+        List<Integer> idsList = new ArrayList<>(3);
+        int cpt=0;
+
+        if(options.isWithStopAction()){
+            idsList.add(cpt++);
+            final Intent notificationIntentStop = new Intent(context, StopSoundReceiver.class)
+                    .putExtra(Notification.EXTRA_ID, options.getId())
+                    .putExtra(Action.EXTRA_ID, "STOP_" +Action.CLICK_ACTION_ID)
+                    .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                    .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            if (extras != null) {
+                notificationIntentStop.putExtras(extras);
+            }
+
+            PendingIntent intentStop = PendingIntent.getService(context,
+                    reqCode, notificationIntentStop, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setDeleteIntent(intentStop);
+            builder.addAction(new NotificationCompat.Action.Builder(R.drawable.ic_action_stop , "Stop" , intentStop).build());
         }
 
-        PendingIntent intentStop = PendingIntent.getService(context,
-                reqCode, notificationIntentStop, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        if(options.isWithPauseAction()) {
+            idsList.add(cpt++);
+            final Intent notificationIntentPause = new Intent(context, PauseSoundReceiver.class)
+                    .putExtra(Notification.EXTRA_ID, options.getId())
+                    .putExtra(Action.EXTRA_ID, "PAUSE_" +Action.CLICK_ACTION_ID)
+                    .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
+                    .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            if (extras != null) {
+                notificationIntentPause.putExtras(extras);
+            }
+            reqCode = random.nextInt();
+            PendingIntent intentPause = PendingIntent.getService(context,
+                    reqCode, notificationIntentPause, PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_pause, "Pause", intentPause));
 
-        builder.setDeleteIntent(intentStop);
+        }
 
-
-        builder.addAction(new NotificationCompat.Action.Builder(R.drawable.ic_action_stop , "Stop" , intentStop).build());
-
-
-        if(withPausePlayActions) {
-
-           final Intent notificationIntentPause = new Intent(context, PauseSoundReceiver.class)
+        if(options.isWithPlayAction()) {
+            idsList.add(cpt++);
+            final Intent notificationIntentResume = new Intent(context, ResumeSoundReceiver.class)
                    .putExtra(Notification.EXTRA_ID, options.getId())
-                   .putExtra(Action.EXTRA_ID, Action.CLICK_ACTION_ID)
+                   .putExtra(Action.EXTRA_ID, "PLAY_" + Action.CLICK_ACTION_ID)
                    .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
                    .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-           reqCode = random.nextInt();
-           PendingIntent intentPause = PendingIntent.getService(context,
-                   reqCode, notificationIntentPause, PendingIntent.FLAG_CANCEL_CURRENT);
-           builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_pause, "Pause", intentPause));
-
-
-           final Intent notificationIntentResume = new Intent(context, ResumeSoundReceiver.class)
-                   .putExtra(Notification.EXTRA_ID, options.getId())
-                   .putExtra(Action.EXTRA_ID, "STOP_" + Action.CLICK_ACTION_ID)
-                   .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
-                   .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
+            if (extras != null) {
+                notificationIntentResume.putExtras(extras);
+            }
            reqCode = random.nextInt();
            PendingIntent intentResume = PendingIntent.getService(context,
                    reqCode, notificationIntentResume, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -277,12 +292,12 @@ public final class Builder {
 
         }
 
-        int[] ids = {0};
+        int[] ids = new int[idsList.size()];
 
-        if(withPausePlayActions){
-            ids = new int[] {0, 1, 2};
-
+        for (int i =0; i< idsList.size();i++){
+            ids[i] = idsList.get(i);
         }
+
 
         builder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
                 .setShowActionsInCompactView(ids));

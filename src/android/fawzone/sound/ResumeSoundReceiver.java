@@ -11,10 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import org.fawzone.util.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.appplant.cordova.plugin.notification.Notification;
+import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.receiver.AbstractClickReceiver;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
@@ -27,6 +29,7 @@ import static de.appplant.cordova.plugin.notification.Options.EXTRA_LAUNCH;
  * up to foreground.
  */
 public class ResumeSoundReceiver extends AbstractClickReceiver {
+    public static final String TAG = "ResumeSoundReceiver";
 
 
     /**
@@ -37,41 +40,29 @@ public class ResumeSoundReceiver extends AbstractClickReceiver {
      */
     @Override
     public void onClick(Notification notification, Bundle bundle) {
-        String action   = getAction();
-        JSONObject data = new JSONObject();
-        Log.e("ResumeSoundReceiver", " > onClick " +action);
-        setTextInput(action, data);
-        launchAppIf();
+        try {
 
-        /*
-        AssetUtil assets = AssetUtil.getInstance(this);
-
-        // create a handler to post messages to the main thread
-        Handler mHandler = new Handler(getMainLooper());
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast toast = Toast.makeText(notification.getContext(), "PLAY", Toast.LENGTH_SHORT); // For example
-
-                // toast.setMargin(10,10);
-                toast.setGravity(Gravity.BOTTOM, 10, 10);
-                LinearLayout toastContentView = (LinearLayout) toast.getView();
-                ImageView imageView = new ImageView(notification.getContext());
-                //imageView.setImageBitmap(options.getRingerModeVibrateIconNormal());
-
-                imageView.setImageURI(assets.parse("res://ic_action_play.png"));
-                //imageView.setBackgroundColor(Color.GRAY);
-
-                toastContentView.addView(imageView, 0);
-
-                toast.show();
-            }
-        });
-*/
-        SoundManager.resumeSound(notification, true);
-        
+            String action = getAction();
+            JSONObject data = new JSONObject();
+            Log.e(TAG, " > onClick " + action);
+            setTextInput(action, data);
+            launchAppIf();
 
 
+            JSONObject update = new JSONObject();
+            update.put(Options.OPT_SHOW_PAUSE_ACTION, true);
+            update.put(Options.OPT_SHOW_PLAY_ACTION, false);
+            update.put(Options.OPT_SHOW_STOP_ACTION, true);
+            Utils.updateNotification(update, notification);
+
+            SoundManager.resumeSound(notification, true);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, " onReceive :: ", e);
+        }
     }
 
 

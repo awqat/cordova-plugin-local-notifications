@@ -16,11 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import org.fawzone.util.Utils;
 import org.json.JSONObject;
 
 import de.appplant.cordova.plugin.localnotification.LocalNotification;
 import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
+import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.receiver.AbstractClickReceiver;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
@@ -44,49 +46,11 @@ public class PauseSoundReceiver extends AbstractClickReceiver {
 
             SoundManager.pauseSound(notification, true);
 
-/*
-            AssetUtil assets = AssetUtil.getInstance(this);
-
-            // create a handler to post messages to the main thread
-            Handler mHandler = new Handler(notification.getContext().getMainLooper());
-
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast toast = Toast.makeText(notification.getContext(), "PAUSE", Toast.LENGTH_SHORT); // For example
-
-                    // toast.setMargin(10,10);
-                    toast.setGravity(Gravity.BOTTOM, 10, 10);
-                    LinearLayout toastContentView = (LinearLayout) toast.getView();
-                    ImageView imageView = new ImageView(notification.getContext());
-                    //imageView.setImageBitmap(options.getRingerModeVibrateIconNormal());
-
-                    imageView.setImageURI(assets.parse("res://ic_action_pause.png"));
-                    //imageView.setBackgroundColor(Color.GRAY);
-
-                    toastContentView.addView(imageView, 0);
-
-                    toast.show();
-                }
-            });
-*/
-
-   /*         // toast.setMargin(10,10);
-            toast.setGravity(Gravity.CENTER, 10, 10);
-            LinearLayout toastContentView = (LinearLayout) toast.getView();
-            ImageView imageView = new ImageView(notification.getContext());
-            //imageView.setImageBitmap(options.getRingerModeVibrateIconNormal());
-
-            imageView.setImageURI(assets.parse("res://audio_silent.png"));
-            //imageView.setBackgroundColor(Color.GRAY);
-
-            toastContentView.addView(imageView, 0);
-            toast.show();
-            */
-
-
-
-
+            JSONObject update  = new JSONObject();
+            update.put(Options.OPT_SHOW_PAUSE_ACTION, false);
+            update.put(Options.OPT_SHOW_PLAY_ACTION, true);
+            update.put(Options.OPT_SHOW_STOP_ACTION, true);
+            Utils.updateNotification(update, notification);
 
 
         } catch (Exception e) {

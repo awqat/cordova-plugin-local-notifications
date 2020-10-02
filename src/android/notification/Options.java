@@ -69,6 +69,7 @@ public final class Options {
     // Default icon path
     private static final String DEFAULT_ICON = "res://icon";
 
+
     // The original JSON object
     private final JSONObject options;
 
@@ -78,6 +79,13 @@ public final class Options {
     // Asset util instance
     private final AssetUtil assets;
 
+    public static final String OPT_SOUND = "sound";
+
+    public static final String OPT_SOUND_DETACHED = "soundDetached";
+
+    public static final String OPT_SHOW_PLAY_ACTION = "showPlayAction";
+    public static final String OPT_SHOW_PAUSE_ACTION = "showPauseAction";
+    public static final String OPT_SHOW_STOP_ACTION = "showStopAction";
     /**
      * When creating without a context, various methods might not work well.
      *
@@ -187,7 +195,7 @@ public final class Options {
      * @return
      */
     boolean isSoundDetached() {
-        return options.optBoolean("soundDetached", false);
+        return options.optBoolean(OPT_SOUND_DETACHED, false);
     }
 
 
@@ -477,7 +485,7 @@ public final class Options {
      * Sound file path for the local notification.
      */
     public Uri getSound() {
-        return assets.parse(options.optString("sound", null));
+        return assets.parse(options.optString(OPT_SOUND, null));
     }
 
     /**
@@ -530,12 +538,28 @@ public final class Options {
         return options.optBoolean("vibrate", true);
     }
 
+
     /**
      * If Add Pause Play Actions.
      */
-    public boolean isWithPausePlayActions() {
-        return options.optBoolean("showPausePlayActions", false);
+    public boolean isWithPlayAction() {
+        return options.optBoolean(OPT_SHOW_PLAY_ACTION, false);
     }
+
+    /**
+     * If Add Pause Play Actions.
+     */
+    public boolean isWithPauseAction() {
+        return options.optBoolean(OPT_SHOW_PAUSE_ACTION, false);
+    }
+
+    /**
+     * If Add Pause Play Actions.
+     */
+    public boolean isWithStopAction() {
+        return options.optBoolean(OPT_SHOW_STOP_ACTION, false);
+    }
+
 
     /**
      * If the phone should play no sound.

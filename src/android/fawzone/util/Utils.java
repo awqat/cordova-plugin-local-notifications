@@ -8,11 +8,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import de.appplant.cordova.plugin.localnotification.TriggerReceiver;
+import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
 public class Utils {
 
+
+    public static void updateNotification(JSONObject update, Notification notification) {
+        Manager manager =Manager.getInstance(notification.getContext());
+        manager.update(notification.getId(), update, TriggerReceiver.class);
+    }
 
 
     public static Integer getNotificationId(Notification notification) {

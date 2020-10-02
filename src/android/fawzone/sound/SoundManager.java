@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import de.appplant.cordova.plugin.localnotification.TriggerReceiver;
 import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
+import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.fireEvent;
@@ -33,7 +34,7 @@ public class SoundManager {
 
     private static MediaPlayer sound;
 
-    private static final String SOUND_FAILBACK_FILE = "public/audio/adhan-ahmed-el-kourdi.mp3";
+    private static final String SOUND_FAILBACK_FILE = "public/audio/chant_rossignol.mp3";
 
     public static class SoundOnCompletionListener implements MediaPlayer.OnCompletionListener {
 
@@ -49,16 +50,11 @@ public class SoundManager {
 
             try {
 
-                //notification.clear();
-                Manager manager =Manager.getInstance(notification.getContext());
-
                 JSONObject update  = new JSONObject();
-                //update.put("icon", iconRingerModeNormal);
-                update.put("sound", null);
-                update.put("soundDetached", false);
+                update.put(Options.OPT_SOUND, null);
+                update.put(Options.OPT_SOUND_DETACHED, false);
 
-                manager.update(notification.getId(), update, TriggerReceiver.class);
-
+                Utils.updateNotification(update, notification);
 
                 sound.release();
             } catch (Exception e) {
@@ -71,6 +67,8 @@ public class SoundManager {
                 fireEvent(SOUND_COMPLETE, notification);
             }
         }
+
+
     }
 
 
@@ -172,31 +170,7 @@ public class SoundManager {
             //this.setState(AudioPlayer.STATE.MEDIA_STARTING);
             sound.setOnPreparedListener(new SoundOnPreparedListener(notification));
             sound.setOnErrorListener(new SoundOnErrorListener(notification, context));
-           // sound.prepareAsync();
 
-
-            // TODO   addSoundActions(builder, extras);
-
-        /*    sound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    Log.i("TAG", notification.getId() + "  :  sound complete clearing notification  ");
-                    notification.clear();
-
-                    try {
-                        sound.release();
-                    } catch (Exception e) {
-                        Log.e(TAG, " playSound :: onCompletion :: sound.release ", e);
-                    }
-
-                    sound = null;
-
-                    if (canFireEvent(notification)) {
-                        fireEvent(SOUND_COMPLETE, notification);
-                    }
-                }
-            });
-*/
         } catch (Exception e) {
             Log.e(TAG, " createSound :: old sound.release() ", e);
         }
