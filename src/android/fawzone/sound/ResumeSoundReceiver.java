@@ -1,15 +1,9 @@
 package org.fawzone.sound;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.RemoteInput;
+
+import androidx.core.app.RemoteInput;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import org.fawzone.util.Utils;
 import org.json.JSONException;
@@ -18,7 +12,6 @@ import org.json.JSONObject;
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.receiver.AbstractClickReceiver;
-import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
 import static de.appplant.cordova.plugin.localnotification.LocalNotification.fireEvent;
 import static de.appplant.cordova.plugin.notification.Options.EXTRA_LAUNCH;

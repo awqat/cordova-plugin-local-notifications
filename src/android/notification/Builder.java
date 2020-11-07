@@ -30,9 +30,9 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.MessagingStyle.Message;
-import android.support.v4.media.app.NotificationCompat.MediaStyle;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationCompat.MessagingStyle.Message;
+import androidx.media.app.NotificationCompat.MediaStyle ;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
@@ -299,7 +299,7 @@ public final class Builder {
         }
 
 
-        builder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
+        builder.setStyle(new MediaStyle()
                 .setShowActionsInCompactView(ids));
     }
 

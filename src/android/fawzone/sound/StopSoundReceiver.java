@@ -21,15 +21,13 @@
 
 package org.fawzone.sound;
 
-import android.media.Ringtone;
 import android.os.Bundle;
-import android.support.v4.app.RemoteInput;
+import androidx.core.app.RemoteInput;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.appplant.cordova.plugin.localnotification.LocalNotification;
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.receiver.AbstractClickReceiver;
 

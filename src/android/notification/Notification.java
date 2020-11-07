@@ -31,9 +31,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.service.notification.StatusBarNotification;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.util.ArraySet;
-import android.support.v4.util.Pair;
+import androidx.core.app.NotificationCompat;
+//import androidx.core.util.ArraySet;
+import androidx.core.util.Pair;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -43,6 +43,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,11 +52,10 @@ import static android.app.AlarmManager.RTC_WAKEUP;
 import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.M;
-import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
+import static androidx.core.app.NotificationCompat.PRIORITY_HIGH;
 
-import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
-import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
-import static android.support.v4.app.NotificationCompat.PRIORITY_MIN;
+import static androidx.core.app.NotificationCompat.PRIORITY_MAX;
+import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
 
 /**
  * Wrapper class around OS notification class. Handles basic operations
@@ -188,7 +188,7 @@ public final class Notification {
      */
     void schedule(Request request, Class<?> receiver) {
         List<Pair<Date, Intent>> intents = new ArrayList<Pair<Date, Intent>>();
-        Set<String> ids                  = new ArraySet<String>();
+        Set<String> ids                  = new LinkedHashSet<>();
         AlarmManager mgr                 = getAlarmMgr();
 
         cancelScheduledAlarms();

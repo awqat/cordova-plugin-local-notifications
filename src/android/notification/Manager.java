@@ -31,7 +31,7 @@ import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.service.notification.StatusBarNotification;
-import android.support.v4.app.NotificationManagerCompat;
+import androidx.core.app.NotificationManagerCompat;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -46,19 +46,18 @@ import de.appplant.cordova.plugin.badge.BadgeImpl;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.M;
 import static android.os.Build.VERSION_CODES.O;
-import static android.support.v4.app.NotificationCompat.PRIORITY_MIN;
-import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
-import static android.support.v4.app.NotificationCompat.PRIORITY_DEFAULT;
-import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
-import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MIN;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_LOW;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_DEFAULT;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_HIGH;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_MAX;
+import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
+import static androidx.core.app.NotificationCompat.PRIORITY_LOW;
+import static androidx.core.app.NotificationCompat.PRIORITY_DEFAULT;
+import static androidx.core.app.NotificationCompat.PRIORITY_HIGH;
+import static androidx.core.app.NotificationCompat.PRIORITY_MAX;
+import static androidx.core.app.NotificationManagerCompat.IMPORTANCE_MIN;
+import static androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW;
+import static androidx.core.app.NotificationManagerCompat.IMPORTANCE_DEFAULT;
+import static androidx.core.app.NotificationManagerCompat.IMPORTANCE_HIGH;
+import static androidx.core.app.NotificationManagerCompat.IMPORTANCE_MAX;
 import static de.appplant.cordova.plugin.notification.Notification.PREF_KEY_ID;
 import static de.appplant.cordova.plugin.notification.Notification.Type.TRIGGERED;
-import de.appplant.cordova.plugin.notification.Options;
 
 /**
  * Central way to access all or single local notifications set by specific
