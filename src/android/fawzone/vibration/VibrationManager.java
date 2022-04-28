@@ -25,7 +25,7 @@ public class VibrationManager {
     public static final String PLAY_VIBRATION = "playVibration";
     public static final String STOP_VIBRATION = "stopVibration";
     public static final long[] M_VIBRATE_PATTERN = {0, 400, 800, 600, 800, 800, 800, 1000};
-    public static final int M_VIBRATE_REPEAT = 3;
+    public static final int M_VIBRATE_REPEAT = -1;
 
     private static Vibrator vibrator;
 
