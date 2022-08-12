@@ -98,22 +98,14 @@ public class RingerMode {
             // Put here YOUR code.
             Toast toast = Toast.makeText(context, options.getRingerModeVibrateMsgVibrateEnabled(), Toast.LENGTH_LONG); // For example
 
-            // toast.setMargin(10,10);
-
             toast.setGravity(Gravity.CENTER, 10, 10);
             LinearLayout toastContentView = (LinearLayout) toast.getView();
-            //toastContentView.setDividerPadding(10);
-
-
-            //toastContentView.setBackgroundColor(Color.WHITE);
-
-            ImageView imageView = new ImageView(context);
-            //imageView.setImageBitmap(options.getRingerModeVibrateIconVibrate());
-            AssetUtil assets = AssetUtil.getInstance(context);
-            imageView.setImageURI(assets.parse(options.getRingerModeVibrateIconVibrateName()));
-            //imageView.setBackgroundColor(Color.WHITE);
-
-            toastContentView.addView(imageView, 0);
+            if(toastContentView != null){    
+                ImageView imageView = new ImageView(context);
+                AssetUtil assets = AssetUtil.getInstance(context);
+                imageView.setImageURI(assets.parse(options.getRingerModeVibrateIconVibrateName()));
+                toastContentView.addView(imageView, 0);
+            }
             toast.show();
 
         } catch (Exception e) {

@@ -56,14 +56,16 @@ public class Utils {
                 // toast.setMargin(10,10);
                 toast.setGravity(Gravity.CENTER, 10, 10);
                 LinearLayout toastContentView = (LinearLayout) toast.getView();
-                ImageView imageView = new ImageView(context);
-                //imageView.setImageBitmap(options.getRingerModeVibrateIconNormal());
+                
+                if(toastContentView != null){
+                    ImageView imageView = new ImageView(context);
+                    //imageView.setImageBitmap(options.getRingerModeVibrateIconNormal());
 
-                imageView.setImageURI(assets.parse(imageUri));
-                //imageView.setBackgroundColor(Color.GRAY);
+                    imageView.setImageURI(assets.parse(imageUri));
+                    //imageView.setBackgroundColor(Color.GRAY);
 
-                toastContentView.addView(imageView, 0);
-
+                    toastContentView.addView(imageView, 0);
+                }
                 toast.show();
             }
         });

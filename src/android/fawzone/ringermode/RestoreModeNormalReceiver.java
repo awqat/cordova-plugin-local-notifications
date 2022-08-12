@@ -90,15 +90,13 @@ public class RestoreModeNormalReceiver extends BroadcastReceiver {
 
             Toast toast = Toast.makeText(context, msgRingerModeNormalRestored, Toast.LENGTH_LONG); // For example
 
-            // toast.setMargin(10,10);
             toast.setGravity(Gravity.CENTER, 10, 10);
             LinearLayout toastContentView = (LinearLayout) toast.getView();
-            ImageView imageView = new ImageView(context);
-            //imageView.setImageBitmap(options.getRingerModeVibrateIconNormal());
-            imageView.setImageURI(assets.parse(iconRingerModeNormal));
-            //imageView.setBackgroundColor(Color.GRAY);
-
-            toastContentView.addView(imageView, 0);
+            if(toastContentView != null){
+                ImageView imageView = new ImageView(context);
+                imageView.setImageURI(assets.parse(iconRingerModeNormal));
+                toastContentView.addView(imageView, 0);
+            }
             toast.show();
 
 
