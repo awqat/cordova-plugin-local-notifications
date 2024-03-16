@@ -37,6 +37,7 @@ import androidx.core.util.Pair;
 import android.util.Log;
 import android.util.SparseArray;
 
+import org.fawzone.util.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,6 +51,7 @@ import java.util.Set;
 import static android.app.AlarmManager.RTC;
 import static android.app.AlarmManager.RTC_WAKEUP;
 import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.M;
 import static androidx.core.app.NotificationCompat.PRIORITY_HIGH;
@@ -231,8 +233,12 @@ public final class Notification {
             if (!date.after(new Date()) && trigger(intent, receiver))
                 continue;
 
-            PendingIntent pi = PendingIntent.getBroadcast(
-                    context, 0, intent, FLAG_CANCEL_CURRENT);
+            //Build flags
+            int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, flags);
+
+            Log.i(" options ", ""+options.getPrio());
 
             try {
                 try {
@@ -337,9 +343,13 @@ public final class Notification {
 
         for (String action : actions) {
             Intent intent = new Intent(action);
+            //SME
+//            intent.setPackage(this.context.getPackageName());
 
-            PendingIntent pi = PendingIntent.getBroadcast(
-                    context, 0, intent, 0);
+            //Build flags
+            int flags = Utils.buildPendingIntentFlags(context, FLAG_UPDATE_CURRENT);
+
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, flags);
 
             if (pi != null) {
                 getAlarmMgr().cancel(pi);

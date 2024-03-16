@@ -1,8 +1,10 @@
 package org.fawzone.util;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +19,7 @@ import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
 public class Utils {
 
+    private static final String TAG = "UTILS";
 
     public static void updateNotification(JSONObject update, Notification notification) {
         Manager manager =Manager.getInstance(notification.getContext());
@@ -71,6 +74,21 @@ public class Utils {
         });
     }
 
-
+    /**
+     *
+     * @param context
+     * @param flagsIn
+     *
+     * @return
+     */
+    public static int buildPendingIntentFlags(Context context, int flagsIn){
+        int flagsOut = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            flagsOut = flagsIn | PendingIntent.FLAG_MUTABLE;
+        } else {
+            flagsOut = flagsIn;
+        }
+        return flagsOut;
+    }
 
 }

@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -90,7 +92,7 @@ public class RestoreModeNormalReceiver extends BroadcastReceiver {
 
             Toast toast = Toast.makeText(context, msgRingerModeNormalRestored, Toast.LENGTH_LONG); // For example
 
-            toast.setGravity(Gravity.CENTER, 10, 10);
+//            toast.setGravity(Gravity.CENTER, 10, 10);
             LinearLayout toastContentView = (LinearLayout) toast.getView();
             if(toastContentView != null){
                 ImageView imageView = new ImageView(context);
@@ -98,6 +100,15 @@ public class RestoreModeNormalReceiver extends BroadcastReceiver {
                 toastContentView.addView(imageView, 0);
             }
             toast.show();
+
+/*
+            Toast toast = new Toast(context);
+            View toast_view = LayoutInflater.from(context).inflate(R.layout.support_simple_spinner_dropdown_item, null);
+            toast.setView(toast_view);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+*/
 
 
             Manager manager =Manager.getInstance(context);

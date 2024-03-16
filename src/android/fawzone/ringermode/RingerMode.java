@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -25,6 +27,8 @@ import static android.app.AlarmManager.RTC_WAKEUP;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.M;
 
+import org.fawzone.util.Utils;
+
 public class RingerMode {
 
     public static final String TAG = "RingerMode";
@@ -36,6 +40,9 @@ public class RingerMode {
         try {
             Context context = notification.getContext();
             Options options = notification.getOptions();
+
+
+            Log.i(TAG, "  RingerModeVibrateEnable =  "+options.getRingerModeVibrateEnable());
 
             if (!options.getRingerModeVibrateEnable()) {
                 Log.i(TAG, " ! RingerModeVibrateEnable => do nothing  ");
@@ -76,7 +83,10 @@ public class RingerMode {
                     .putExtra(RestoreModeNormalReceiver.MSG_NORMAL_RESTORED, options.getRingerModeVibrateMsgNormalRestored());
 
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            //Build flags
+            int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, flags);
 
             int restoreModeNormalAfter = options.getRingerModeVibrateRestoreAfter(); // 60 * 30 * 1000;
 
@@ -96,9 +106,9 @@ public class RingerMode {
             }
 
             // Put here YOUR code.
-            Toast toast = Toast.makeText(context, options.getRingerModeVibrateMsgVibrateEnabled(), Toast.LENGTH_LONG); // For example
 
-            toast.setGravity(Gravity.CENTER, 10, 10);
+            Toast toast = Toast.makeText(context, options.getRingerModeVibrateMsgVibrateEnabled(), Toast.LENGTH_LONG); // For example
+            //toast.setGravity(Gravity.CENTER, 10, 10);
             LinearLayout toastContentView = (LinearLayout) toast.getView();
             if(toastContentView != null){    
                 ImageView imageView = new ImageView(context);
@@ -108,6 +118,14 @@ public class RingerMode {
             }
             toast.show();
 
+/*
+            Toast toast = new Toast(context);
+            View toast_view = LayoutInflater.from(context).inflate(R.layout.support_simple_spinner_dropdown_item, null);
+            toast.setView(toast_view);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+*/
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, " setRingerModeVibrate :: ", e);

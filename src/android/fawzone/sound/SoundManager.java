@@ -200,7 +200,18 @@ public class SoundManager {
                 return;
             }
 
-            sound.prepareAsync();
+            //SME
+            //sound.prepareAsync();
+
+            sound.setOnPreparedListener(new SoundOnPreparedListener(notification));
+
+            /*
+            sound.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    sound.start();
+                }
+            });*/
 
             if (fireEvent && Utils.canFireEvent(notification)) {
                 fireEvent(PLAY_SOUND, notification);

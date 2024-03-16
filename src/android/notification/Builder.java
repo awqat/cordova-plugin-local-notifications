@@ -40,6 +40,7 @@ import org.fawzone.sound.PauseSoundReceiver;
 import org.fawzone.sound.ResumeSoundReceiver;
 import org.fawzone.sound.SoundManager;
 import org.fawzone.sound.StopSoundReceiver;
+import org.fawzone.util.Utils;
 import org.fawzone.vibration.VibrationManager;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ import de.appplant.cordova.plugin.localnotification.LocalNotification;
 import de.appplant.cordova.plugin.notification.action.Action;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
+import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static de.appplant.cordova.plugin.notification.Notification.EXTRA_UPDATE;
 
@@ -251,8 +253,13 @@ public final class Builder {
                 notificationIntentStop.putExtras(extras);
             }
 
+            //Build flags
+        // basé sur origine            int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_CANCEL_CURRENT);
+        int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_UPDATE_CURRENT);
+
             PendingIntent intentStop = PendingIntent.getService(context,
-                    reqCode, notificationIntentStop, PendingIntent.FLAG_UPDATE_CURRENT);
+                    reqCode, notificationIntentStop, flags);
+
             builder.setDeleteIntent(intentStop);
             builder.addAction(new NotificationCompat.Action.Builder(R.drawable.ic_action_stop , "Stop" , intentStop).build());
         }
@@ -269,8 +276,12 @@ public final class Builder {
                 notificationIntentPause.putExtras(extras);
             }
             reqCode = random.nextInt();
+
+            //Build flags
+            int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_CANCEL_CURRENT);
+
             PendingIntent intentPause = PendingIntent.getService(context,
-                    reqCode, notificationIntentPause, PendingIntent.FLAG_CANCEL_CURRENT);
+                    reqCode, notificationIntentPause, flags);
             builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_pause, "Pause", intentPause));
 
         }
@@ -286,8 +297,12 @@ public final class Builder {
                 notificationIntentResume.putExtras(extras);
             }
            reqCode = random.nextInt();
-           PendingIntent intentResume = PendingIntent.getService(context,
-                   reqCode, notificationIntentResume, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            //Build flags
+            int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            PendingIntent intentResume = PendingIntent.getService(context,
+                   reqCode, notificationIntentResume, flags);
            builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_play, "Play", intentResume));
 
         }
@@ -457,8 +472,13 @@ public final class Builder {
 
         int reqCode = random.nextInt();
 
+        //Build flags
+        int flags = Utils.buildPendingIntentFlags(context, FLAG_UPDATE_CURRENT);
+
+
         PendingIntent deleteIntent = PendingIntent.getBroadcast(
-                context, reqCode, intent, FLAG_UPDATE_CURRENT);
+                context, reqCode, intent, flags);
+
 
         builder.setDeleteIntent(deleteIntent);
     }
@@ -486,8 +506,11 @@ public final class Builder {
 
         int reqCode = random.nextInt();
 
+        //Build flags
+        int flags = Utils.buildPendingIntentFlags(context, FLAG_UPDATE_CURRENT);
+
         PendingIntent contentIntent = PendingIntent.getService(
-                context, reqCode, intent, FLAG_UPDATE_CURRENT);
+                context, reqCode, intent, flags);
 
         builder.setContentIntent(contentIntent);
     }
