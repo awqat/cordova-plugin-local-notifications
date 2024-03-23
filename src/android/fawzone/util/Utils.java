@@ -64,7 +64,7 @@ public class Utils {
                 Toast toast = Toast.makeText(context, text, duration); // For example
 
                 // toast.setMargin(10,10);
-                toast.setGravity(Gravity.CENTER, 10, 10);
+                // toast.setGravity(Gravity.CENTER, 10, 10);
                 LinearLayout toastContentView = (LinearLayout) toast.getView();
                 
                 if(toastContentView != null){

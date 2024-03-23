@@ -34,6 +34,8 @@ public class SoundManager {
 
     private static MediaPlayer sound;
 
+    private static int currentVolume;
+
     private static final String SOUND_FAILBACK_FILE = "public/audio/chant_rossignol.mp3";
 
     public static class SoundOnCompletionListener implements MediaPlayer.OnCompletionListener {
@@ -55,6 +57,8 @@ public class SoundManager {
                 update.put(Options.OPT_SOUND_DETACHED, false);
 
                 Utils.updateNotification(update, notification);
+
+                SoundManager.restoreCurrentVolume(notification.getContext());
 
                 sound.release();
             } catch (Exception e) {
@@ -88,6 +92,7 @@ public class SoundManager {
             // If start playing after prepared
             //if (!this.prepareOnly) {
             //sound.start();
+
 
             playSound(notification,true);
             //this.setState(STATE.MEDIA_RUNNING);
@@ -137,6 +142,7 @@ public class SoundManager {
         Log.i(TAG, " > createSound  "+aSoundUri);
 
         if (sound != null) {
+
             try {
                 Log.w(TAG, "    createSound OLD SOUND IS NOT NULL ==> release ...");
                 if(sound.isPlaying()){
@@ -203,6 +209,9 @@ public class SoundManager {
             //SME
             //sound.prepareAsync();
 
+            saveCurrentVolume(notification.getContext());
+
+
             sound.setOnPreparedListener(new SoundOnPreparedListener(notification));
 
             /*
@@ -239,7 +248,32 @@ public class SoundManager {
         final int volumeToSet = getVolumeToSet(manager, soundVolume);
         Log.i(TAG, "    setSoundVolume notifiaction " + notification.getId() + " volumeToSet "+volumeToSet);
         //sound.setVolume(volumeToSet, volumeToSet);
+
+        //Save current context before update
+
         manager.setStreamVolume(AudioManager.STREAM_MUSIC, volumeToSet,  AudioManager.FLAG_PLAY_SOUND );
+    }
+
+    /**
+     * Store the current volume
+     *
+     * @param context
+     */
+    public static void saveCurrentVolume(Context context){
+        final AudioManager manager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        currentVolume = manager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        Log.i(TAG, " > saveCurrentVolume get currentVolume = "+ currentVolume );
+    }
+
+    /**
+     * Rstore current volume
+     * @param context
+     */
+    public static void restoreCurrentVolume(Context context){
+        Log.i(TAG, " < restoreCurrentVolume restore currentVolume = "+ currentVolume );
+        final AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        manager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume,  AudioManager.FLAG_PLAY_SOUND );
     }
 
 
@@ -261,7 +295,6 @@ public class SoundManager {
        Log.i(TAG, " > playSound  " + id);
 
 
-
         if (sound == null) {
             Log.w(TAG, "    playSound  " + id + "  SOUND IS NULL ");
             return;
@@ -271,6 +304,7 @@ public class SoundManager {
             Log.w(TAG, "    playSound  current notifiaction " + notification.getId() + " HAS NO SOUND ");
             return;
         }
+
 
         setSoundVolume(notification);
         try {
@@ -320,6 +354,8 @@ public class SoundManager {
 
             Utils.displayToast(notification.getContext(), "STOP", "res://ic_action_stop.png" , Toast.LENGTH_SHORT);
 
+            //Restore current volume
+            restoreCurrentVolume(notification.getContext());
 //TODO             sound.release();
         } catch (Exception e) {
             Log.e(TAG, " stopSound :: ", e);
@@ -398,6 +434,9 @@ public class SoundManager {
         }
     }
 
+    public static int getCurrentVolume() {
+        return currentVolume;
+    }
 
 }
 
