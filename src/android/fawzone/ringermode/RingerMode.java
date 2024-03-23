@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
-import capacitor.android.plugins.R;
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.Request;
@@ -68,7 +67,9 @@ public class RingerMode {
 
            //notification.setLargeIcon(options.getRingerModeVibrateIconVibrate());
 
-            notification.setSmallIcon(R.drawable.ic_action_vibrate);
+            AssetUtil assets = AssetUtil.getInstance(options.getContext());
+
+            notification.setSmallIcon(assets.getResId("res://ic_action_vibrate.png"));
 
 
             Log.e(TAG, "  schedule retore ringer mode normal ... ");
@@ -112,7 +113,6 @@ public class RingerMode {
             LinearLayout toastContentView = (LinearLayout) toast.getView();
             if(toastContentView != null){    
                 ImageView imageView = new ImageView(context);
-                AssetUtil assets = AssetUtil.getInstance(context);
                 imageView.setImageURI(assets.parse(options.getRingerModeVibrateIconVibrateName()));
                 toastContentView.addView(imageView, 0);
             }

@@ -1,8 +1,15 @@
 package org.fawzone.util;
 
-import android.app.PendingIntent;
+import static android.app.PendingIntent.FLAG_MUTABLE;
+import static android.app.PendingIntent.FLAG_ALLOW_UNSAFE_IMPLICIT_INTENT;
+
 import android.content.Context;
 import android.net.Uri;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.S;
+import static android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE;
+
+
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
@@ -83,8 +90,11 @@ public class Utils {
      */
     public static int buildPendingIntentFlags(Context context, int flagsIn){
         int flagsOut = 0;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            flagsOut = flagsIn | PendingIntent.FLAG_MUTABLE;
+
+        if (SDK_INT >= S && SDK_INT < UPSIDE_DOWN_CAKE  ) {
+            flagsOut = flagsIn | FLAG_MUTABLE;
+        } else if (SDK_INT >= UPSIDE_DOWN_CAKE) {
+            flagsOut = flagsIn | FLAG_MUTABLE | FLAG_ALLOW_UNSAFE_IMPLICIT_INTENT;
         } else {
             flagsOut = flagsIn;
         }

@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import capacitor.android.plugins.R;
+
 import de.appplant.cordova.plugin.localnotification.TriggerReceiver;
 import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;

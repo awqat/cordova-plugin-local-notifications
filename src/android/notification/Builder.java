@@ -25,9 +25,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.core.app.NotificationCompat;
@@ -44,18 +41,13 @@ import org.fawzone.util.Utils;
 import org.fawzone.vibration.VibrationManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
-import capacitor.android.plugins.R;
-import de.appplant.cordova.plugin.localnotification.ClickReceiver;
-import de.appplant.cordova.plugin.localnotification.LocalNotification;
+
 import de.appplant.cordova.plugin.notification.action.Action;
 import de.appplant.cordova.plugin.notification.util.AssetUtil;
 
-import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static de.appplant.cordova.plugin.notification.Notification.EXTRA_UPDATE;
 
@@ -83,6 +75,9 @@ public final class Builder {
     // Additional extras to merge into each intent
     private Bundle extras;
 
+    //Manage assets
+    private AssetUtil assets;
+
     /**
      * Constructor
      *
@@ -91,6 +86,7 @@ public final class Builder {
     public Builder(Options options) {
         this.context = options.getContext();
         this.options = options;
+        this.assets = AssetUtil.getInstance(options.getContext());
     }
 
     /**
@@ -249,6 +245,7 @@ public final class Builder {
                     .putExtra(Action.EXTRA_ID, "STOP_" +Action.CLICK_ACTION_ID)
                     .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
                     .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
             if (extras != null) {
                 notificationIntentStop.putExtras(extras);
             }
@@ -257,11 +254,20 @@ public final class Builder {
         // basé sur origine            int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_CANCEL_CURRENT);
         int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_UPDATE_CURRENT);
 
+
+        /*    Intent notificationTrampolineActivityIntent = new Intent(context.getApplicationContext(), "org.fawzone.awqat_live.MainActivity");
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+            stackBuilder.addNextIntentWithParentStack(notificationTrampolineActivityIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+*/
             PendingIntent intentStop = PendingIntent.getService(context,
                     reqCode, notificationIntentStop, flags);
 
             builder.setDeleteIntent(intentStop);
-            builder.addAction(new NotificationCompat.Action.Builder(R.drawable.ic_action_stop , "Stop" , intentStop).build());
+
+
+
+            builder.addAction(new NotificationCompat.Action.Builder(this.assets.getResId("res://ic_action_stop.png") , "Stop" , intentStop).build());
         }
 
 
@@ -282,7 +288,7 @@ public final class Builder {
 
             PendingIntent intentPause = PendingIntent.getService(context,
                     reqCode, notificationIntentPause, flags);
-            builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_pause, "Pause", intentPause));
+            builder.addAction(new NotificationCompat.Action(this.assets.getResId("res://ic_action_pause.png"), "Pause", intentPause));
 
         }
 
@@ -303,7 +309,7 @@ public final class Builder {
 
             PendingIntent intentResume = PendingIntent.getService(context,
                    reqCode, notificationIntentResume, flags);
-           builder.addAction(new NotificationCompat.Action(R.drawable.ic_action_play, "Play", intentResume));
+           builder.addAction(new NotificationCompat.Action(this.assets.getResId("res://ic_action_play.png"), "Play", intentResume));
 
         }
 
