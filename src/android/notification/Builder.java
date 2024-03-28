@@ -260,11 +260,12 @@ public final class Builder {
             stackBuilder.addNextIntentWithParentStack(notificationTrampolineActivityIntent);
             PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 */
+            //PendingIntent intentStop = Utils.buildTrampolineActivityIntent(context, notificationIntentStop, reqCode, flags);
             PendingIntent intentStop = PendingIntent.getService(context,
                     reqCode, notificationIntentStop, flags);
 
-            builder.setDeleteIntent(intentStop);
 
+            builder.setDeleteIntent(intentStop);
 
 
             builder.addAction(new NotificationCompat.Action.Builder(this.assets.getResId("res://ic_action_stop.png") , "Stop" , intentStop).build());
@@ -286,8 +287,11 @@ public final class Builder {
             //Build flags
             int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            PendingIntent intentPause = PendingIntent.getService(context,
-                    reqCode, notificationIntentPause, flags);
+            PendingIntent intentPause = Utils.buildTrampolineActivityIntent(context, notificationIntentPause, reqCode, flags);
+
+            //PendingIntent intentPause = PendingIntent.getService(context,
+            //        reqCode, notificationIntentPause, flags);
+
             builder.addAction(new NotificationCompat.Action(this.assets.getResId("res://ic_action_pause.png"), "Pause", intentPause));
 
         }
@@ -307,8 +311,11 @@ public final class Builder {
             //Build flags
             int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            PendingIntent intentResume = PendingIntent.getService(context,
-                   reqCode, notificationIntentResume, flags);
+            PendingIntent intentResume = Utils.buildTrampolineActivityIntent(context, notificationIntentResume, reqCode, flags);
+
+
+            //PendingIntent intentResume = PendingIntent.getService(context,
+            //       reqCode, notificationIntentResume, flags);
            builder.addAction(new NotificationCompat.Action(this.assets.getResId("res://ic_action_play.png"), "Play", intentResume));
 
         }
@@ -481,9 +488,10 @@ public final class Builder {
         //Build flags
         int flags = Utils.buildPendingIntentFlags(context, FLAG_UPDATE_CURRENT);
 
+        PendingIntent deleteIntent = Utils.buildTrampolineActivityIntent(context, intent, reqCode, flags);
 
-        PendingIntent deleteIntent = PendingIntent.getBroadcast(
-                context, reqCode, intent, flags);
+        //PendingIntent deleteIntent = PendingIntent.getBroadcast(
+        //        context, reqCode, intent, flags);
 
 
         builder.setDeleteIntent(deleteIntent);
@@ -515,10 +523,27 @@ public final class Builder {
         //Build flags
         int flags = Utils.buildPendingIntentFlags(context, FLAG_UPDATE_CURRENT);
 
-        PendingIntent contentIntent = PendingIntent.getService(
-                context, reqCode, intent, flags);
+      //  Intent notificationTrampolineActivityIntent = new Intent();
+/*
+        String packageName = context.getPackageName();
+        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        String className = launchIntent.getComponent().getClassName();
+        intent.setComponent(new ComponentName(
+                packageName,
+                className
+        ));
+        //  Intent notificationTrampolineActivityIntent = new Intent(context.getApplicationContext(), MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(intent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(reqCode, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+*/
 
-        builder.setContentIntent(contentIntent);
+        PendingIntent resultPendingIntent = Utils.buildTrampolineActivityIntent(context, intent, reqCode, flags);
+
+                // PendingIntent contentIntent = PendingIntent.getService(
+       //         context, reqCode, intent, flags);
+
+        builder.setContentIntent(resultPendingIntent);
     }
 
     /**
@@ -565,8 +590,10 @@ public final class Builder {
 
         int reqCode = random.nextInt();
 
-        return PendingIntent.getService(
-                context, reqCode, intent, FLAG_UPDATE_CURRENT);
+        //return PendingIntent.getService(
+        //        context, reqCode, intent, FLAG_UPDATE_CURRENT);
+
+        return Utils.buildTrampolineActivityIntent(context, intent, reqCode, FLAG_UPDATE_CURRENT);
     }
 
     /**

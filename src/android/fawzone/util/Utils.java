@@ -101,4 +101,50 @@ public class Utils {
         return flagsOut;
     }
 
+    /**
+     * Build Trampoline Activity Intent
+     *
+     * @param context context
+     * @param intent intent
+     * @param reqCode req code
+     *
+     * @return pending intent
+     */
+    public static PendingIntent buildTrampolineActivityIntent(Context context, Intent intent, int reqCode, int flags){
+
+        //If < Android 12
+        if( SDK_INT < S || LocalNotification.isAppRunning()){
+            PendingIntent contentIntent = PendingIntent.getService(
+                             context, reqCode, intent, flags);
+            return contentIntent;
+        }
+
+        //Else
+
+        String packageName = context.getPackageName();
+        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        String className = launchIntent.getComponent().getClassName();
+
+        /*
+        Intent intent0 = new Intent(context, StopSoundReceiver.class);
+        intent0.setComponent(new ComponentName(packageName, className));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+       // stackBuilder.addNextIntent(intent);
+        stackBuilder.addNextIntent(intent0);
+*/
+        //Intent intent = new Intent(context, StopSoundReceiver.class);
+        intent.setComponent(new ComponentName(packageName, className));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        // stackBuilder.addNextIntent(intent);
+        stackBuilder.addNextIntent(intent);
+
+
+
+//        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(reqCode, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(reqCode, flags);
+        return resultPendingIntent;
+
+    }
+
 }
