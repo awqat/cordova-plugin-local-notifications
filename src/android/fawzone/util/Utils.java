@@ -3,7 +3,11 @@ package org.fawzone.util;
 import static android.app.PendingIntent.FLAG_MUTABLE;
 import static android.app.PendingIntent.FLAG_ALLOW_UNSAFE_IMPLICIT_INTENT;
 
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.S;
@@ -17,8 +21,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import org.fawzone.sound.StopSoundReceiver;
 import org.json.JSONObject;
 
+import de.appplant.cordova.plugin.localnotification.LocalNotification;
 import de.appplant.cordova.plugin.localnotification.TriggerReceiver;
 import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
