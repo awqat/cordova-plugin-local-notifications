@@ -28,6 +28,10 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import static android.os.Build.VERSION.SDK_INT;
+
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
@@ -85,6 +89,11 @@ public class LocalNotification extends CordovaPlugin {
         Activity activity   = cordova.getActivity();
         Intent launchIntent = activity.getIntent();
         String action 		= launchIntent.getAction();
+
+        if(SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE){
+            Log.d(TAG, " No moveTaskToBack for android version >= " + Build.VERSION_CODES.UPSIDE_DOWN_CAKE);
+            return;
+        }
 
         if ((action != null) && (AppLauncher.ACTION_FORCE_RELOAD_BACKGROUND.equalsIgnoreCase(action))) {
 //            isForceReload = true;
