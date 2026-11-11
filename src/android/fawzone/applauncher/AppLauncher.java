@@ -129,7 +129,11 @@ public class AppLauncher {
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);//262144->FLAG_ACTIVITY_NO_USER_ACTION
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);//65536->FLAG_ACTIVITY_NO_ANIMATION
 
-        notification.getContext().startActivity(launchIntent);
+        try {
+            notification.getContext().startActivity(launchIntent);
+        } catch (Exception e) {
+            Log.w(TAG, "Lancement d'activity en arrière-plan bloqué par le système Android (BAL): " + e.getMessage());
+        }
 
     }
 

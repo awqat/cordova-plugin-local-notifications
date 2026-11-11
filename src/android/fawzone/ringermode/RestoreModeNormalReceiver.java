@@ -56,10 +56,21 @@ public class RestoreModeNormalReceiver extends BroadcastReceiver {
 
             if (hasDndAccess) {
                 try {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    Log.i(TAG, "RINGER_MODE_NORMAL réappliqué avec succès en arrière-plan !");
-                } catch (SecurityException se) {
-                    Log.e(TAG, "SecurityException lors du changement de ringerMode en arrière-plan", se);
+                    Intent serviceIntent = new Intent(context, VibrateForegroundService.class);
+                    serviceIntent.setAction(VibrateForegroundService.ACTION_SET_NORMAL);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        context.startForegroundService(serviceIntent);
+                    } else {
+                        context.startService(serviceIntent);
+                    }
+                    Log.i(TAG, "VibrateForegroundService démarré pour RINGER_MODE_NORMAL !");
+                } catch (Exception se) {
+                    Log.e(TAG, "Erreur lors du démarrage du service de changement de ringerMode", se);
+                    try {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Fallback setRingerMode error", e);
+                    }
                 }
             } else {
                 Log.w(TAG, "Permission Ne Pas Déranger (DND) non accordée. Impossible de changer le ringerMode.");

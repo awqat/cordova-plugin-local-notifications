@@ -61,28 +61,43 @@ public class RingerMode {
             }
             // ==== Begin Mode vibrate
 
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-
-
-
-           //notification.setLargeIcon(options.getRingerModeVibrateIconVibrate());
+            try {
+                Intent serviceIntent = new Intent(context, VibrateForegroundService.class);
+                serviceIntent.setAction(VibrateForegroundService.ACTION_SET_VIBRATE);
+                if (SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    context.startForegroundService(serviceIntent);
+                } else {
+                    context.startService(serviceIntent);
+                }
+                Log.i(TAG, "VibrateForegroundService démarré pour RINGER_MODE_VIBRATE !");
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur démarrage service Vibrate", e);
+                try {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                } catch (Exception ex) {
+                    Log.e(TAG, "Fallback setRingerMode error", ex);
+                }
+            }
 
             AssetUtil assets = AssetUtil.getInstance(options.getContext());
-
-            notification.setSmallIcon(assets.getResId("res://ic_action_vibrate.png"));
-
+            int vibrateResId = assets.getResId("res://ic_action_vibrate.png");
+            if (vibrateResId != 0) {
+                notification.setSmallIcon(vibrateResId);
+            } else {
+                int alarmResId = assets.getResId("res://ic_action_alarm.png");
+                if (alarmResId != 0) {
+                    notification.setSmallIcon(alarmResId);
+                }
+            }
 
             Log.e(TAG, "  schedule retore ringer mode normal ... ");
 
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-            //Intent intent = new Intent(context, RestoreModeNormalReceiver.class);
-
             Intent intent = new Intent(context, RestoreModeNormalReceiver.class)
                     .putExtra(Notification.EXTRA_ID, options.getId())
                     .putExtra(RestoreModeNormalReceiver.ICON_NORMAL_RESTORED, options.getRingerModeVibrateIconNormalName())
                     .putExtra(RestoreModeNormalReceiver.MSG_NORMAL_RESTORED, options.getRingerModeVibrateMsgNormalRestored());
-
 
             //Build flags
             int flags = Utils.buildPendingIntentFlags(context, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -106,17 +121,9 @@ public class RingerMode {
                 alarmManager.setExact(RTC_WAKEUP, triggerTime, pendingIntent);
             }
 
-            // Put here YOUR code.
-
-            Toast toast = Toast.makeText(context, options.getRingerModeVibrateMsgVibrateEnabled(), Toast.LENGTH_LONG); // For example
-            //toast.setGravity(Gravity.CENTER, 10, 10);
-            LinearLayout toastContentView = (LinearLayout) toast.getView();
-            if(toastContentView != null){    
-                ImageView imageView = new ImageView(context);
-                imageView.setImageURI(assets.parse(options.getRingerModeVibrateIconVibrateName()));
-                toastContentView.addView(imageView, 0);
+            if (options.getRingerModeVibrateMsgVibrateEnabled() != null && !options.getRingerModeVibrateMsgVibrateEnabled().isEmpty()) {
+                Toast.makeText(context.getApplicationContext(), options.getRingerModeVibrateMsgVibrateEnabled(), Toast.LENGTH_LONG).show();
             }
-            toast.show();
 
 /*
             Toast toast = new Toast(context);
