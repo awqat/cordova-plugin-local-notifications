@@ -180,6 +180,14 @@
         <resource-file src="src/android/res/drawable-xhdpi/ic_action_vibrate.png" target="res/drawable-xhdpi/ic_action_vibrate.png" />
         <resource-file src="src/android/res/drawable-xxhdpi/ic_action_vibrate.png" target="res/drawable-xxhdpi/ic_action_vibrate.png" />
 
+        <resource-file src="src/android/res/drawable/ic_ringer_normal.xml" target="src/android/res/drawable/ic_ringer_normal.xml" />
+        <resource-file src="src/android/res/drawable/ic_ringer_silent.xml" target="src/android/res/drawable/ic_ringer_silent.xml " />
+        <resource-file src="src/android/res/drawable/ic_ringer_vibrate.xml" target="src/android/res/drawable/ic_ringer_vibrate.xml" />
+
+        <resource-file src="src/android/res/layout/custom_ringer_notif_big.xml" target="src/android/res/layout/custom_ringer_notif_big.xml" />
+        <resource-file src="src/android/res/layout/custom_ringer_notif_small.xml" target="src/android/res/layout/custom_ringer_notif_small.xml" />
+
+
         <source-file
             src="src/android/xml/localnotification_provider_paths.xml"
             target-dir="res/xml" />

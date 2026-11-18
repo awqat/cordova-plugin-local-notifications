@@ -88,6 +88,15 @@ public class RestoreModeNormalReceiver extends BroadcastReceiver {
             if (msgRingerModeNormalRestored != null && !msgRingerModeNormalRestored.isEmpty()) {
                 Log.i(TAG, msgRingerModeNormalRestored);
                 Toast.makeText(context.getApplicationContext(), msgRingerModeNormalRestored, Toast.LENGTH_LONG).show();
+
+                String channelId = "ringer_mode_banner_channel";
+
+                String name = "Alerte mode sonnerie";
+                String title = "Mode sonnerie";
+                String iconName = "ic_ringer_normal";
+                String text = "Mode normal restoré";
+
+                RingerMode.displayNotification(context.getApplicationContext(), channelId, iconName, name, title, text );
             }
 
             if (toastId != 0 && iconRingerModeNormal != null) {
