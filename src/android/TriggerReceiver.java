@@ -22,6 +22,7 @@
 package de.appplant.cordova.plugin.localnotification;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
 
@@ -75,8 +76,13 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
         Options options  = notification.getOptions();
         Manager manager  = Manager.getInstance(context);
         int badge        = options.getBadgeNumber();
-        Log.i("TriggerReceiver", " > onTrigger ");
+        Log.i("TriggerReceiver", " >> onTrigger ");
 
+        Intent intent = new Intent("org.fawzone.awqat_live.ATHAN");
+        intent.setPackage(context.getPackageName());
+        intent.putExtra("EXTRA_INFO", "Données à traiter "+options.getText());
+
+        context.sendBroadcast(intent);
 
         if (badge > 0) {
             manager.setBadge(badge);
